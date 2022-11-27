@@ -7,19 +7,19 @@ import league.types.*;
 
 public class BaseConector {
 
-    LinkedList<SimplePlayer> getNextN(int n){return null;}
-    LinkedList<SimplePlayer> getNextN(int n, int player_id){return null;}
-    LinkedList<SimplePlayer> getPreviousN(int n, int player_id){return null;}
+    public LinkedList<SimplePlayer> getNextN(int n){return null;}
+    public LinkedList<SimplePlayer> getNextN(int n, int player_id){return null;}
+    public LinkedList<SimplePlayer> getPreviousN(int n, int player_id){return null;}
 
-    FullPlayer get_player(int player_id){return null;}
-
-
-    SimpleMatch[] get_mathces(){return null;}
-    FullMatch get_match(int match_id){return null;}
+    public FullPlayer get_player(int player_id){return null;}
 
 
-    SimpleTeam[] getTeams(){return null;}
-    FullTeam getTeam(int teamId){return null;}
+    public SimpleMatch[] getMatches(){return null;}
+    public FullMatch getMatch(int match_id){return null;}
+
+
+    public SimpleTeam[] getTeams(){return null;}
+    public FullTeam getTeam(int teamId){return null;}
 
 
 
