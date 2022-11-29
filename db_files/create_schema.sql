@@ -1,11 +1,11 @@
 CREATE TABLE countries (
     country_id INTEGER,
-    name        VARCHAR2 (20 CHAR)
+    name        VARCHAR2 (40 CHAR)
 );
 
 CREATE TABLE leagues (
     league_id INTEGER,
-    name        VARCHAR2 (20 CHAR)
+    name        VARCHAR2 (40 CHAR)
 );
 
 CREATE TABLE matches (
@@ -17,8 +17,8 @@ CREATE TABLE matches (
 
 CREATE TABLE players (
     player_id          INTEGER,
-    name               VARCHAR2(20 CHAR),
-    surname            VARCHAR2(20 CHAR),
+    name               VARCHAR2(40 CHAR),
+    surname            VARCHAR2(40 CHAR),
     birth_date         DATE,
     birth_country_id INTEGER,
     team_id       INTEGER,
@@ -46,7 +46,7 @@ CREATE TABLE stadiums (
 CREATE TABLE teams (
     team_id            INTEGER,
     name               VARCHAR2(40 CHAR),
-    acronym            VARCHAR2(5 CHAR),
+    acronym            VARCHAR2(10 CHAR),
     country_id INTEGER
 );
 
