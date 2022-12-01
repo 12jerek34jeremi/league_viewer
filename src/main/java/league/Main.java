@@ -12,7 +12,6 @@ class Main{
     public static void main(String args[]){
         Scanner scanner = new Scanner(System.in);
         BaseConector connector = new BaseConector();
-        int playerId, number;
         String message =    "Choose one from the following options (type by name)\n" +
                             "getPlayer -- returns player by ID given (type: getPlayer {id})\n" +
                             "getNextN -- returns N number of players (type: getNextN {N} {player_id} - if you want not to start from the beginning\n" +
@@ -25,55 +24,53 @@ class Main{
         System.out.println(message);
         
         while(true) {
-            String userInput = scanner.next();
+            System.out.print("Enter command >>>");
+            String userInput = scanner.nextLine();
             String[] commands = userInput.split(" ");
+            String command = commands[0];
 
-            switch(commands[0]) {
-                case "getPlayer":
-                    playerId = Integer.parseInt(commands[1]);
-                    FullPlayer player = connector.get_player(playerId);
-                    //trzeba tu dodać komendę printPlayer, gdy będzie napisana
-                case "getNextN":
-                    playerId = 1; //zakładam, że minimalne player_id to 1
-                    number = Integer.parseInt(commands[1]);
-                    if (commands.length > 2) {
-                        playerId = Integer.parseInt(commands[2]);
-                    }
-                    LinkedList<SimplePlayer> players = connector.getNextN(number, playerId);
-                    //do zastanowienia się, czy nie zadeklarować przed switchem
-                    for(var a : players) {
-                        System.out.println(a);
-                    }
-                case "getPreviousN":
-                    playerId = Integer.parseInt(commands[1]);
-                    number = Integer.parseInt(commands[2]);
-                    players = connector.getPreviousN(number, playerId);
-                    for(var a : players) {
-                        System.out.println(a);
-                    }
-                case "getMatches":
-                    SimpleMatch[] matches = connector.getMatches();
-                    for(var a : matches) {
-                        System.out.println(a);
-                    }
-                case "getMatch":
-                    int matchId = Integer.parseInt(commands[1]);
-                    FullMatch match = connector.getMatch(matchId);
-                    //printMatch do dodania, kiedy napiszemy
-                case "getTeams":
-                    SimpleTeam[] teams = connector.getTeams();
-                    for(var a : teams) {
-                        System.out.println(a);
-                    }
-                case "getTeam":
-                    int teamId = Integer.parseInt(commands[1]);
-                    FullTeam team = connector.getTeam(teamId);
-                    //printTeam do dodania, kiey napiszemy
-                case "quit":
-                    return;
-                default:
-                    System.out.println("You did not type correctly one of the methods. Try again");
+//
+//            System.out.println("Commands length is :" + commands.length);
+//            for (int i = 0; i < commands.length; i++) {
+//                System.out.println("Command " + i + ": '" + commands[i] + "'");
+//            }
+//            System.out.println("Your command is : '" + command+"'");
+
+            if(command.equals("getPlayer")){
+                int playerId = Integer.parseInt(commands[1]);
+                FullPlayer player = connector.getPlayer(playerId);
+                PrettyPrint.printFullPlayer(player);
+            }else if (command.equals("getNextN")){
+                int number = Integer.parseInt(commands[1]);
+                LinkedList<SimplePlayer> players;
+                if (commands.length > 2) {
+                    int playerId = Integer.parseInt(commands[2]);
+                    players = connector.getNextN(number, playerId);
+                }else{
+                    players = connector.getNextN(number);
+                }
+               PrettyPrint.printSimplePlayerList(players);
+            }else if (command.equals("getPreviousN")){
+                int number = Integer.parseInt(commands[1]);
+                int playerId = Integer.parseInt(commands[2]);
+                LinkedList<SimplePlayer> players = connector.getPreviousN(number, playerId);
+                PrettyPrint.printSimplePlayerList(players);
+            }else if (command.equals("getMatches")){
+                SimpleMatch[] matches = connector.getMatches();
+                PrettyPrint.printSimpleMatchArray(matches);
+            }else if (command.equals("getTeams")){
+                SimpleTeam[] teams = connector.getTeams();
+                PrettyPrint.printSimpleTeamsArray(teams);
+            }else if (command.equals("getTeam")){
+                int teamId = Integer.parseInt(commands[1]);
+                FullTeam team = connector.getTeam(teamId);
+                PrettyPrint.printFullTeam(team);
+            }else if (command.equals("quit")){
+                return;
+            }else{
+                System.out.println("You did not type correctly one of the methods. Try again");
             }
+
         }
     }
 }
