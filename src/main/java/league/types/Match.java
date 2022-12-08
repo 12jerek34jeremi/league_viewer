@@ -2,14 +2,14 @@ package league.types;
 
 import java.util.Date;
 
-public class SimpleMatch {
+public class Match {
 
     public int firstTeamId, secondTeamId, match_id;
     public String firstTeamName, secondTeamName, location, score;
     public Date date;
-    public SimpleMatch(int firstTeamId, int secondTeamId, int match_id,
-                       String firstTeamName, String secondTeamName, String location, String score,
-                       Date date){
+    public Match(int firstTeamId, int secondTeamId, int match_id,
+                 String firstTeamName, String secondTeamName, String location, String score,
+                 Date date){
         this.firstTeamId = firstTeamId;
         this.secondTeamId = secondTeamId;
         this.match_id = match_id;

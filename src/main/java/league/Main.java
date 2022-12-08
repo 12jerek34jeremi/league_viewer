@@ -1,76 +1,101 @@
 package league;
 
-import java.sql.*;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 import league.types.*;
-import oracle.jdbc.driver.OracleDriver;
-import league.conectivity.BaseConector;
+import league.conectivity.DataProvider;
 
 class Main{
+
     public static void main(String args[]){
+        League[] leagues = DataProvider.getLeagues();
+        String message = """
+                Type 'league  {id}' to view league of given id.
+                Type 'refresh' to refresh league list and view it.
+                Type 'quit' to exit program.
+                    """;
         Scanner scanner = new Scanner(System.in);
-        BaseConector connector = new BaseConector();
-        String message =    "Choose one from the following options (type by name)\n" +
-                            "getPlayer -- returns player by ID given (type: getPlayer {id})\n" +
-                            "getNextN -- returns N number of players (type: getNextN {N} {player_id} - if you want not to start from the beginning\n" +
-                            "getPreviousN -- returns N number of players before given ID (type: getPreviousN {N} {player_id}\n" +
-                            "getMatches -- returns all of the matches (type: getMatches)\n" +
-                            "getMatch -- returns match by ID given (type: getMatch {match_id}\n" +
-                            "getTeams -- returns all of the teams (type: getTeams)\n" +
-                            "getTeam -- returns team by ID given (type: getTeam {team_id}\n" +
-                            "quit -- exit program";
+
+        PrettyPrint.printLeagueArray(leagues);
         System.out.println(message);
-        
-        while(true) {
-            System.out.print("Enter command >>>");
+
+        while (true){
+            System.out.print("<Main menu> Enter command >>>");
             String userInput = scanner.nextLine();
             String[] commands = userInput.split(" ");
-            String command = commands[0];
 
-//
-//            System.out.println("Commands length is :" + commands.length);
-//            for (int i = 0; i < commands.length; i++) {
-//                System.out.println("Command " + i + ": '" + commands[i] + "'");
-//            }
-//            System.out.println("Your command is : '" + command+"'");
-
-            if(command.equals("getPlayer")){
-                int playerId = Integer.parseInt(commands[1]);
-                FullPlayer player = connector.getPlayer(playerId);
-                PrettyPrint.printFullPlayer(player);
-            }else if (command.equals("getNextN")){
-                int number = Integer.parseInt(commands[1]);
-                LinkedList<SimplePlayer> players;
-                if (commands.length > 2) {
-                    int playerId = Integer.parseInt(commands[2]);
-                    players = connector.getNextN(number, playerId);
+            if(commands[0].equals("league")){
+                DataProvider dataProvider = DataProvider.getDataProvider(Integer.parseInt(commands[1]));
+                if(dataProvider == null){
+                    System.out.println("Unable to fetch data from server, try again later!");
                 }else{
-                    players = connector.getNextN(number);
+                    startLeagueViewer(dataProvider);
                 }
-               PrettyPrint.printSimplePlayerList(players);
-            }else if (command.equals("getPreviousN")){
-                int number = Integer.parseInt(commands[1]);
-                int playerId = Integer.parseInt(commands[2]);
-                LinkedList<SimplePlayer> players = connector.getPreviousN(number, playerId);
-                PrettyPrint.printSimplePlayerList(players);
-            }else if (command.equals("getMatches")){
-                SimpleMatch[] matches = connector.getMatches();
-                PrettyPrint.printSimpleMatchArray(matches);
-            }else if (command.equals("getTeams")){
-                SimpleTeam[] teams = connector.getTeams();
-                PrettyPrint.printSimpleTeamsArray(teams);
-            }else if (command.equals("getTeam")){
-                int teamId = Integer.parseInt(commands[1]);
-                FullTeam team = connector.getTeam(teamId);
-                PrettyPrint.printFullTeam(team);
-            }else if (command.equals("quit")){
+            }else if(commands[0].equals("refresh")){
+                leagues = DataProvider.getLeagues();
+                PrettyPrint.printLeagueArray(leagues);
+            }else if (commands[0].equals("quit")){
                 return;
             }else{
                 System.out.println("You did not type correctly one of the methods. Try again");
             }
+        }
+    }
+
+    public static void startLeagueViewer(DataProvider dataProvider){
+        Scanner scanner = new Scanner(System.in);
+        String message =    "Choose one from the following options (type by name)\n" +
+                            "getPlayer -- returns player by ID given (type: getPlayer {id})\n" +
+                            "getPlayers -- returns all of the players (type: getPlayers)\n"+
+                            "getMatches -- returns all of the matches (type: getMatches)\n" +
+                            "getMatch -- returns match by ID given (type: getMatch {match_id}\n" +
+                            "getTeams -- returns all of the teams (type: getTeams)\n" +
+                            "getTeam -- returns team by ID given (type: getTeam {team_id}\n" +
+                            "refresh {players, matches, teams} -- refreshes some data" +
+                            "quit -- go back to main menu (choosing league)";
+        System.out.println(message);
+        while(true) {
+            System.out.print("<League Viewer> Enter command >>>");
+            String userInput = scanner.nextLine();
+            String[] commands = userInput.split(" ");
+            String command = commands[0];
+
+            if(command.equals("getPlayer")){
+                PrettyPrint.printFullPlayer(dataProvider.getPlayer(Integer.parseInt(commands[1])));
+            }else if (command.equals("getPlayers")){
+                PrettyPrint.printSimplePlayerArray(dataProvider.getPlayers());
+            }else if (command.equals("getMatches")){
+                PrettyPrint.printSimpleMatchArray(dataProvider.getMatches());
+            }else if (command.equals("getTeams")){
+                PrettyPrint.printSimpleTeamsArray(dataProvider.getTeams());
+            }else if (command.equals("getTeam")){
+                PrettyPrint.printFullTeam(dataProvider.getTeam(Integer.parseInt(commands[1])));
+            }else if (command.equals("quit")){
+                return;
+            } else if (command.equals("refresh")) {
+                boolean success;
+                if(commands[1].equals("players")){
+                    success = dataProvider.refreshPlayers();
+                }else if(commands[1].equals("matches")){
+                    success = dataProvider.refreshMatches();
+                }else if(commands[1].equals("teams")){
+                    success = dataProvider.refreshTeams();
+                }else{
+                    System.out.println("What is '" + commands[1] + "' ?"); return;
+                }
+
+                if(success){
+                    System.out.println(commands[1] + " updated successfully!");
+                }else{
+                    System.out.println("An error occurred while trying to refresh " + commands[1]);
+                }
+
+            } else{
+                System.out.println("You did not type correctly one of the methods. Try again");
+            }
 
         }
+
     }
 }

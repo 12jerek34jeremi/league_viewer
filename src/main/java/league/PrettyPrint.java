@@ -2,8 +2,6 @@ package league;
 
 import league.types.*;
 
-import java.util.LinkedList;
-
 public class PrettyPrint {
     public static String populateToN(String word, int n){
         if(word == null){
@@ -15,7 +13,7 @@ public class PrettyPrint {
         return populateToN(Integer.toString(number), n);
     }
 
-    public static void printSimplePlayerList(LinkedList<SimplePlayer> players){
+    public static void printSimplePlayerArray(SimplePlayer[] players){
         if(players == null){
             System.out.println("players are null!");
         }
@@ -32,7 +30,7 @@ public class PrettyPrint {
         }
     }
 
-    public static void printSimpleMatchArray(SimpleMatch[] matches){
+    public static void printSimpleMatchArray(Match[] matches){
         if(matches == null){
             System.out.println("matches are null!");
             return;
@@ -42,7 +40,7 @@ public class PrettyPrint {
         System.out.println( populateToN("firstTeamId", n) + populateToN("secondTeamId", n) +
                 populateToN("firstTeamName", n) + populateToN("SecondTeamName", n) +
                 populateToN("location", n) + populateToN("score", n) + populateToN("date", n));
-        for(SimpleMatch match : matches){
+        for(Match match : matches){
             System.out.println( populateToN(match.firstTeamId, n) + populateToN(match.secondTeamId, n) +
                     populateToN(match.firstTeamName, n) + populateToN(match.secondTeamName, n) +
                     populateToN(match.location, n) + populateToN(match.score, n) +
@@ -74,8 +72,24 @@ public class PrettyPrint {
     }
 
     public static void printFullTeam(FullTeam team){
+        if(team == null){
+            System.out.println("The team is null!");
+            return;
+        }
         System.out.println("teamId: " + team.teamID + ", teamName: " + team.teamName + ", origin" + team.origins);
         System.out.println("Those are teams matches: ");
         printSimpleMatchArray(team.matches);
+    }
+
+    public static void printLeagueArray(League[] leagues){
+        if(leagues == null){
+            System.out.println("Leagues are null!");
+            return;
+        }
+        final int n = 25;
+        System.out.println( populateToN("leagueId", n) + populateToN("leagueName", n));
+        for(League league : leagues){
+            System.out.println( populateToN(league.leagueId, n) + populateToN(league.leagueName, n));
+        }
     }
 }
