@@ -14,27 +14,6 @@
             <artifactId>ojdbc11</artifactId>
             <version>21.7.0.0</version>
         </dependency>
-        <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>league</groupId>
-    <artifactId>football</artifactId>
-    <version>1.0.0</version>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
-            <version>21.7.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.swing</groupId>
-            <artifactId>swing</artifactId>
-            <version>1.0.2</version>
-        </dependency>
     </dependencies>
 
     <properties>
@@ -50,32 +29,11 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>league.Main</mainClass>
+                    <mainClass>league.RunApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
 </project>
-    </dependencies>
 
-    <properties>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>league.Main</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-</project>
