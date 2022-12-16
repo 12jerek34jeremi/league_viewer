@@ -1,68 +1,116 @@
 package league;
 import league.conectivity.DataProvider;
 import league.types.League;
+import league.types.Match;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class SwingApp extends JFrame {
-    private JComboBox<String> comboBox;
-    private JLabel label;
-    private String selectedItem;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-    public SwingApp() {
-        setTitle("Ligi piłkarskie");
-        setSize(800, 600);
 
-        // Pobranie danych o ligach
+public class SwingApp{
+    JMenu menu;
+    JFrame frame;
+    ArrayList<JMenuItem> items;
+    HashMap<String, Integer> leaguesData;
+    JMenuBar mb;
+    JPanel teams, matches, players;
+    DataProvider dataProvider;
+    String chosenLeagueName;
+    JTabbedPane tabbedPane;
+    JTextField textField;
+    public SwingApp2() {
+        //creating leagues to run dataProvider
+
+        frame = new JFrame();
+        checkDataProvider(dataProvider, frame);
         League[] leagues = DataProvider.getLeagues();
-        ArrayList <String> names = new ArrayList<>();
+        League firstLeague = leagues[0];
+        chosenLeagueName = firstLeague.leagueName;
+        dataProvider = new DataProvider(firstLeague.leagueId);
+
+        //initializing variables
+
+        mb = new JMenuBar();
+        menu = new JMenu(chosenLeagueName + " (zmień ligę)");
+        items = new ArrayList<>();
+        leaguesData = new HashMap<String, Integer>();
+
+        // creating JTabbedPane and its Pane's
+
+        tabbedPane = new JTabbedPane();
+        teams = new JPanel();
+        matches = new JPanel();
+        players = new JPanel();
+        tabbedPane.add("mecze", matches);
+        tabbedPane.add("zespoły", teams);
+        tabbedPane.add("zawodnicy", players);
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (tabbedPane.getSelectedComponent().equals(matches)) {
+                    textField = new JTextField("mecze");
+                    textField.setVisible(true);
+                    matches.add(textField);
+                } else if (tabbedPane.getSelectedComponent().equals(teams)) {
+                    textField = new JTextField("zespoły");
+                    textField.setVisible(true);
+                    teams.add(textField);
+                } else if (tabbedPane.getSelectedComponent().equals(players)) {
+                    textField = new JTextField();
+                    textField.setVisible(true);
+                    players.add(textField);
+                }
+            }
+        });
+
+        //creating a MenuBar with its items
+
         for (League league : leagues) {
-            names.add(league.leagueName);
+            JMenuItem menuItem = new JMenuItem(league.leagueName);
+            items.add(menuItem);
+            leaguesData.put(league.leagueName, league.leagueId);
         }
 
-        // Ustawienie listy rozwijanej z nazwami lig
-        String[] data = names.toArray(new String[names.size()]);
-        comboBox = new JComboBox<>(data);
+        for (JMenuItem item : items) {
+            menu.add(item);
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JMenuItem item = (JMenuItem) e.getSource();
+                    String name = item.getText();
+                    Integer leagueID = leaguesData.get(name);
+                    dataProvider = new DataProvider(leagueID);
+                    menu.setText(name + " (zmień ligę)");
+                    checkDataProvider(dataProvider, frame);
+                }
+            });
+        }
 
-        // Ustawienie etykiety z tekstem
-        label = new JLabel("To jest liga " + data[0]);
-        selectedItem = data[0];
-
-        add(label, BorderLayout.NORTH);
-        add(comboBox, BorderLayout.EAST);
-
-        comboBox.addActionListener(e -> updateText());
-
-        setLayout(new GridLayout(3, 1));
-
-        // Utworzenie trzech Buttonów
-        JButton matchesButton = new JButton("Mecze");
-        JButton teamsButton = new JButton("Zespoły");
-        JButton playersButton = new JButton("Zawodnicy");
-
-        add(matchesButton);
-        add(teamsButton);
-        add(playersButton);
-
-        matchesButton.addActionListener(e -> label.setText("To są mecze " + selectedItem));
-        teamsButton.addActionListener(e -> label.setText("To są zespoły " + selectedItem));
-        playersButton.addActionListener(e -> label.setText("To są zawodnicy " + selectedItem));
-
-        // Ustawienie okna jako widocznego
-        setVisible(true);
+        mb.add(menu);
+        frame.add(tabbedPane);
+        frame.setTitle("Ligi piłkarskie");
+        frame.setJMenuBar(mb);
+        frame.setLayout(new GridLayout());
+        frame.setSize(600, 600);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
-
-    private void updateText() {
-        //Zmiana wybranego elementu
-        selectedItem = (String) comboBox.getSelectedItem();
-        label.setText("To jest " + selectedItem);
-    }
-
-
-    public static void main(String[] args) {
+    public static void main(String args[]) {
         new SwingApp();
+    }
+    private void checkDataProvider(DataProvider dataProvider, JFrame frame){
+        if (dataProvider.getLeagues() == null){
+            JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
+            System.exit(0);
+        }
     }
 }
 
