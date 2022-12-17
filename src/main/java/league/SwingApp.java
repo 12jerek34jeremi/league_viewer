@@ -26,15 +26,17 @@ public class SwingApp{
     String chosenLeagueName;
     JTabbedPane tabbedPane;
     JTextField textField;
-    public SwingApp2() {
+    public SwingApp() {
         //creating leagues to run dataProvider
 
         frame = new JFrame();
-        checkDataProvider(dataProvider, frame);
         League[] leagues = DataProvider.getLeagues();
+        if(leagues == null) showMessageAndExit(frame);
+
         League firstLeague = leagues[0];
         chosenLeagueName = firstLeague.leagueName;
-        dataProvider = new DataProvider(firstLeague.leagueId);
+        dataProvider = DataProvider.getDataProvider(firstLeague.leagueId);
+        if(dataProvider == null) showMessageAndExit(frame);
 
         //initializing variables
 
@@ -64,7 +66,7 @@ public class SwingApp{
                     textField.setVisible(true);
                     teams.add(textField);
                 } else if (tabbedPane.getSelectedComponent().equals(players)) {
-                    textField = new JTextField();
+                    textField = new JTextField("zawodnicy");
                     textField.setVisible(true);
                     players.add(textField);
                 }
@@ -87,9 +89,11 @@ public class SwingApp{
                     JMenuItem item = (JMenuItem) e.getSource();
                     String name = item.getText();
                     Integer leagueID = leaguesData.get(name);
-                    dataProvider = new DataProvider(leagueID);
+                    dataProvider = DataProvider.getDataProvider(leagueID);
+                    if(dataProvider == null) showMessageAndExit(frame);
                     menu.setText(name + " (zmień ligę)");
-                    checkDataProvider(dataProvider, frame);
+                    //przekazywanie kazdemu panelowi informacji o tym, że zmieniła się liga
+                    //czy może utworzenie nowego panelu?
                 }
             });
         }
@@ -106,11 +110,9 @@ public class SwingApp{
     public static void main(String args[]) {
         new SwingApp();
     }
-    private void checkDataProvider(DataProvider dataProvider, JFrame frame){
-        if (dataProvider.getLeagues() == null){
-            JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
-            System.exit(0);
-        }
+    private void showMessageAndExit(JFrame frame){
+        JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
+        System.exit(0);
     }
 }
 

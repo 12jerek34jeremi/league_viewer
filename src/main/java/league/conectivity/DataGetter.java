@@ -168,6 +168,7 @@ class DataGetter {
 
             new int[]{}
         );
+        if(leagueList == null) return null;
         return leagueList.toArray(new League[leagueList.size()]);
     }
 
