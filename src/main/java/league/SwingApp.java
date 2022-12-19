@@ -1,7 +1,10 @@
 package league;
 import league.conectivity.DataProvider;
+import league.panels.LeaguePanel;
+import league.panels.MatchesPanel;
+import league.panels.PlayersPanel;
+import league.panels.TeamsPanel;
 import league.types.League;
-import league.types.Match;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +24,7 @@ public class SwingApp{
     ArrayList<JMenuItem> items;
     HashMap<String, Integer> leaguesData;
     JMenuBar mb;
-    JPanel teams, matches, players;
+    LeaguePanel teams, matches, players;
     DataProvider dataProvider;
     String chosenLeagueName;
     JTabbedPane tabbedPane;
@@ -35,8 +38,6 @@ public class SwingApp{
 
         League firstLeague = leagues[0];
         chosenLeagueName = firstLeague.leagueName;
-        dataProvider = DataProvider.getDataProvider(firstLeague.leagueId);
-        if(dataProvider == null) showMessageAndExit(frame);
 
         //initializing variables
 
@@ -48,9 +49,9 @@ public class SwingApp{
         // creating JTabbedPane and its Pane's
 
         tabbedPane = new JTabbedPane();
-        teams = new JPanel();
-        matches = new JPanel();
-        players = new JPanel();
+        teams = new TeamsPanel();  //LINE MODIFIED BY JCh
+        matches = new MatchesPanel();  //LINE MODIFIED BY JCh
+        players = new PlayersPanel();  //LINE MODIFIED BY JCh
         tabbedPane.add("mecze", matches);
         tabbedPane.add("zespoły", teams);
         tabbedPane.add("zawodnicy", players);
@@ -92,8 +93,10 @@ public class SwingApp{
                     dataProvider = DataProvider.getDataProvider(leagueID);
                     if(dataProvider == null) showMessageAndExit(frame);
                     menu.setText(name + " (zmień ligę)");
-                    //przekazywanie kazdemu panelowi informacji o tym, że zmieniła się liga
-                    //czy może utworzenie nowego panelu?
+
+                    players.changeLeague(dataProvider);
+                    players.changeLeague(dataProvider);
+                    players.changeLeague(dataProvider);
                 }
             });
         }
