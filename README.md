@@ -11,11 +11,10 @@ Następnie należy użyć oprogramowania Maven do skompilowania i uruchomienia a
 Po uruchomieniu powyższej komendy w konsoli powinny pokazać się komunikaty Maven'a o pomyślnej instalacji i uruchomieniu, oraz instrukcja wyświetlona przez aplikacje.
 ![enter image description here](img/maven_install_exec_sreenshot.png)
 
-Teraz można na przykład użyć komendy getTeams, aby wyświetlić nazwy wszystkich drużyn znajdujących się w bazie danych:
+Teraz można na przykład użyć komendy "league 3", aby aplikacja pobrała z danych informacje o lidze o id 3, a następnie 
+ użyć komendy "getMatches" aby wyświetlić listę wszystkich meczy rozegranych do tej pory w tej lidze.
 
-    getMatches
-Teraz na ekranie powinna wyświetlić się aktualna lista drużyn.
-![enter image description here](img/getTeams_screenshot.png)
+![enter image description here](img/using_app.png)
 
 ## Autorzy
  - Paweł Rogóż
