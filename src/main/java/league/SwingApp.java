@@ -55,24 +55,24 @@ public class SwingApp{
         tabbedPane.add("mecze", matches);
         tabbedPane.add("zespoły", teams);
         tabbedPane.add("zawodnicy", players);
-        tabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (tabbedPane.getSelectedComponent().equals(matches)) {
-                    textField = new JTextField("mecze");
-                    textField.setVisible(true);
-                    matches.add(textField);
-                } else if (tabbedPane.getSelectedComponent().equals(teams)) {
-                    textField = new JTextField("zespoły");
-                    textField.setVisible(true);
-                    teams.add(textField);
-                } else if (tabbedPane.getSelectedComponent().equals(players)) {
-                    textField = new JTextField("zawodnicy");
-                    textField.setVisible(true);
-                    players.add(textField);
-                }
-            }
-        });
+//        tabbedPane.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                if (tabbedPane.getSelectedComponent().equals(matches)) {
+//                    textField = new JTextField("mecze");
+//                    textField.setVisible(true);
+//                    matches.add(textField);
+//                } else if (tabbedPane.getSelectedComponent().equals(teams)) {
+//                    textField = new JTextField("zespoły");
+//                    textField.setVisible(true);
+//                    teams.add(textField);
+//                } else if (tabbedPane.getSelectedComponent().equals(players)) {
+//                    textField = new JTextField("zawodnicy");
+//                    textField.setVisible(true);
+//                    players.add(textField);
+//                }
+//            }
+//        });
 
         //creating a MenuBar with its items
 
@@ -95,8 +95,8 @@ public class SwingApp{
                     menu.setText(name + " (zmień ligę)");
 
                     players.changeLeague(dataProvider);
-                    players.changeLeague(dataProvider);
-                    players.changeLeague(dataProvider);
+                    teams.changeLeague(dataProvider);
+                    matches.changeLeague(dataProvider);
                 }
             });
         }
