@@ -14,6 +14,16 @@
             <artifactId>ojdbc11</artifactId>
             <version>21.7.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -29,7 +39,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>league.Main</mainClass>
+                    <mainClass>league.SwingApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
