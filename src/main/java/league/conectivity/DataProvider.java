@@ -10,6 +10,9 @@ public class DataProvider {
     private Match[] matches;
     private SimpleTeam[] teams;
 
+    private static Stadium[] stadiums = null;
+    private static Country[] countries = null;
+
 
     public static DataProvider getDataProvider(int league_id){
         /*
@@ -26,6 +29,19 @@ public class DataProvider {
 
          @return: DataProvider object or null;
          */
+
+        if(stadiums == null){
+            System.out.println("Getting stadiums");
+            stadiums = DataGetter.getStadiums();
+            if(stadiums == null) return null;
+        }
+        if(countries == null){
+            System.out.println("Getting countries");
+            countries = DataGetter.getCountries();
+            if(countries == null) return null;
+        }
+
+
         DataProvider dataProvider = new DataProvider(league_id);
         if(dataProvider.refreshPlayers() && dataProvider.refreshMatches() && dataProvider.refreshTeams())
             return dataProvider;
@@ -55,7 +71,8 @@ public class DataProvider {
     public SimplePlayer[] getPlayers() { return players; }
     public Match[] getMatches() { return matches; }
     public SimpleTeam[] getTeams() { return teams; }
-
+    public Stadium[] getStadiums(){return stadiums;}
+    public Country[] getCountries() { return countries; }
 
     public FullPlayer getPlayer(int player_id){
         /* This method tries to download from database all information regarding player of given id.
@@ -131,6 +148,16 @@ public class DataProvider {
         );
     }
 
+    public Match getMatch(int matchId){
+        /*
+        This method returns match of given id or null if match of given id was not found.
+         */
+        for (Match match : matches){
+            if(match.match_id == matchId)
+                return match;
+        }
+        return null;
+    }
 
     public boolean refreshPlayers(){
     /*
@@ -171,6 +198,21 @@ public class DataProvider {
         teams = refreshedTeams;
         return true;
     }
+    public boolean refreshStadiums(){
+        Stadium[] refreshedStadiums = DataGetter.getStadiums();
+        if(refreshedStadiums == null) return false;
+        stadiums = refreshedStadiums;
+        return true;
+    }
+    public boolean refreshCountries(){
+        Country[] refreshedCountries = DataGetter.getCountries();
+        if(refreshedCountries == null) return false;
+        countries = refreshedCountries;
+        return true;
+    }
+
+
+
 
     private DataProvider(int league_id) {
         this.league_id = league_id;

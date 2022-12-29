@@ -187,6 +187,44 @@ class DataGetter {
         return origin.getFirst();
     }
 
+    static Country[] getCountries(){
+        LinkedList<Country> countries = getResultList("""
+            SELECT country_id as countryId, name as countryName
+            FROM countries""",
+
+                (((resultSet, resultList) -> {
+                    resultList.add(new Country(
+                            resultSet.getInt("countryId"),
+                            resultSet.getString("countryName")
+                    ));
+                })),
+
+                new int[]{}
+        );
+
+        if(countries == null) return null;
+        return countries.toArray(new Country[countries.size()]);
+    }
+
+    static Stadium[] getStadiums(){
+        LinkedList<Stadium> stadiums = getResultList("""
+            SELECT stadium_id as stadiumId, name as stadiumName
+            FROM stadiums""",
+
+                (((resultSet, resultList) -> {
+                    resultList.add(new Stadium(
+                            resultSet.getInt("stadiumId"),
+                            resultSet.getString("stadiumName")
+                    ));
+                })),
+
+                new int[]{}
+        );
+
+        if(stadiums == null) return null;
+        return stadiums.toArray(new Stadium[stadiums.size()]);
+    }
+
     private static <ArrayType> LinkedList<ArrayType> getResultList(String qr, ListCreator<ArrayType>listCreator,
                                                           int parameters[]){
         Connection con = BaseConector.getConnection();
