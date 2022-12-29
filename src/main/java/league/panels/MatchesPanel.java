@@ -7,7 +7,7 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class MatchesPanel extends LeaguePanel{
+public class MatchesPanel extends LeagueViewingPanel{
     public MatchesPanel(){
         super(
                 new String[]{"Drużyna A", "Drużyna B", "Lokacja", "Wynik", "Data"},

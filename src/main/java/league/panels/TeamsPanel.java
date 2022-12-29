@@ -5,7 +5,7 @@ import league.types.SimpleTeam;
 import javax.swing.*;
 import java.awt.*;
 
-public class TeamsPanel extends LeaguePanel{
+public class TeamsPanel extends LeagueViewingPanel{
     public TeamsPanel(){
         super(
             new String[]{"Nazwa Drużyny"},

@@ -5,7 +5,7 @@ import league.types.SimplePlayer;
 import javax.swing.*;
 import java.awt.*;
 
-public class PlayersPanel extends LeaguePanel{
+public class PlayersPanel extends LeagueViewingPanel{
 
     public PlayersPanel(){
         super(

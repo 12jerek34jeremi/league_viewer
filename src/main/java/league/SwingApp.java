@@ -1,9 +1,6 @@
 package league;
 import league.conectivity.DataProvider;
-import league.panels.LeaguePanel;
-import league.panels.MatchesPanel;
-import league.panels.PlayersPanel;
-import league.panels.TeamsPanel;
+import league.panels.*;
 import league.types.League;
 
 import java.awt.*;
@@ -12,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -24,7 +19,7 @@ public class SwingApp{
     ArrayList<JMenuItem> items;
     HashMap<String, Integer> leaguesData;
     JMenuBar mb;
-    LeaguePanel teams, matches, players;
+    LeaguePanel[] leaguePanels;
     DataProvider dataProvider;
     String chosenLeagueName;
     JTabbedPane tabbedPane;
@@ -36,46 +31,27 @@ public class SwingApp{
         League[] leagues = DataProvider.getLeagues();
         if(leagues == null) showMessageAndExit(frame);
 
+        if(!DataProvider.prepareData()) showMessageAndExit(frame);
+
         League firstLeague = leagues[0];
-        chosenLeagueName = firstLeague.leagueName;
 
         //initializing variables
 
         mb = new JMenuBar();
-        menu = new JMenu(chosenLeagueName + " (zmień ligę)");
+        menu = new JMenu("Wybierz Ligę");
         items = new ArrayList<>();
         leaguesData = new HashMap<String, Integer>();
 
         // creating JTabbedPane and its Pane's
-
         tabbedPane = new JTabbedPane();
-        teams = new TeamsPanel();  //LINE MODIFIED BY JCh
-        matches = new MatchesPanel();  //LINE MODIFIED BY JCh
-        players = new PlayersPanel();  //LINE MODIFIED BY JCh
-        tabbedPane.add("mecze", matches);
-        tabbedPane.add("zespoły", teams);
-        tabbedPane.add("zawodnicy", players);
-//        tabbedPane.addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                if (tabbedPane.getSelectedComponent().equals(matches)) {
-//                    textField = new JTextField("mecze");
-//                    textField.setVisible(true);
-//                    matches.add(textField);
-//                } else if (tabbedPane.getSelectedComponent().equals(teams)) {
-//                    textField = new JTextField("zespoły");
-//                    textField.setVisible(true);
-//                    teams.add(textField);
-//                } else if (tabbedPane.getSelectedComponent().equals(players)) {
-//                    textField = new JTextField("zawodnicy");
-//                    textField.setVisible(true);
-//                    players.add(textField);
-//                }
-//            }
-//        });
+        leaguePanels = new LeaguePanel[]{new MatchesPanel(), new TeamsPanel(), new PlayersPanel(), new AddingPanel()};//LINE MODIFIED BY JCh
+
+        tabbedPane.add("mecze", leaguePanels[0]);
+        tabbedPane.add("zespoły", leaguePanels[1]);
+        tabbedPane.add("zawodnicy", leaguePanels[2]);
+        tabbedPane.add("Dodaj", leaguePanels[3]);
 
         //creating a MenuBar with its items
-
         for (League league : leagues) {
             JMenuItem menuItem = new JMenuItem(league.leagueName);
             items.add(menuItem);
@@ -94,9 +70,9 @@ public class SwingApp{
                     if(dataProvider == null) showMessageAndExit(frame);
                     menu.setText(name + " (zmień ligę)");
 
-                    players.changeLeague(dataProvider);
-                    teams.changeLeague(dataProvider);
-                    matches.changeLeague(dataProvider);
+                    for (LeaguePanel leaguePanel: leaguePanels){
+                        leaguePanel.changeLeague(dataProvider);
+                    }
                 }
             });
         }

@@ -30,23 +30,14 @@ public class DataProvider {
          @return: DataProvider object or null;
          */
 
-        if(stadiums == null){
-            System.out.println("Getting stadiums");
-            stadiums = DataGetter.getStadiums();
-            if(stadiums == null) return null;
-        }
-        if(countries == null){
-            System.out.println("Getting countries");
-            countries = DataGetter.getCountries();
-            if(countries == null) return null;
-        }
-
-
         DataProvider dataProvider = new DataProvider(league_id);
         if(dataProvider.refreshPlayers() && dataProvider.refreshMatches() && dataProvider.refreshTeams())
             return dataProvider;
 
         return null;
+    }
+    public static boolean prepareData(){
+        return (refreshStadiums() && refreshCountries());
     }
 
     public static League[] getLeagues(){
@@ -71,8 +62,8 @@ public class DataProvider {
     public SimplePlayer[] getPlayers() { return players; }
     public Match[] getMatches() { return matches; }
     public SimpleTeam[] getTeams() { return teams; }
-    public Stadium[] getStadiums(){return stadiums;}
-    public Country[] getCountries() { return countries; }
+    public static Stadium[] getStadiums(){return stadiums;}
+    public static Country[] getCountries() { return countries; }
 
     public FullPlayer getPlayer(int player_id){
         /* This method tries to download from database all information regarding player of given id.
@@ -198,13 +189,14 @@ public class DataProvider {
         teams = refreshedTeams;
         return true;
     }
-    public boolean refreshStadiums(){
+
+    public static boolean refreshStadiums(){
         Stadium[] refreshedStadiums = DataGetter.getStadiums();
         if(refreshedStadiums == null) return false;
         stadiums = refreshedStadiums;
         return true;
     }
-    public boolean refreshCountries(){
+    public static boolean refreshCountries(){
         Country[] refreshedCountries = DataGetter.getCountries();
         if(refreshedCountries == null) return false;
         countries = refreshedCountries;
