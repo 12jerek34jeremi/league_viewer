@@ -34,15 +34,79 @@ public class PlayersPanel extends LeagueViewingPanel{
         return (IndexButton) ((JPanel) elementsPanel.getComponent(0)).getComponent(3);
     }
 
-    //Ta metoda jest tylko tymczasowa, żeby sprawdzic czy dziala, nalezy ja napisac od nowa.
+ 
     @Override
     void launchNewWindow(int playerIndex){
         System.out.println("W Players, zostałem kliknięty.");
         System.out.println("Indeks gracza to: " + playerIndex);
 
-        JFrame frame = new JFrame("Test");
-        frame.setSize(600, 600);
-        frame.add(new JLabel("To jest okno z graczem, które implementuje Paweł."));
+        JFrame frame = new JFrame("Zawodnik " + playerIndex);
+
+        Match[] matches = findMatches(playerIndex);
+        JPanel playerMatchesPanel = playerMatchesPanel(matches);
+
+        JPanel playerDataPanel = playerDataPanel(playerIndex);
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("Informacje", playerDataPanel);
+        tabbedPane.add("Mecze", playerMatchesPanel);
+        frame.add(tabbedPane);
+        frame.setSize(300, 300);
         frame.setVisible(true);
+    }
+
+    private Match[] findMatches(int playerIndex){
+        FullPlayer player = dataProvider.getPlayer(playerIndex);
+        int teamId = player.teamId;
+        FullTeam team = dataProvider.getTeam(teamId);
+        return team.matches;
+    }
+
+    private JPanel playerMatchesPanel(Match[] matches){
+        JPanel matchesPanel = new JPanel();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        String[] columnsName = {"Drużyna A", "Drużyna B", "Lokacja", "Wynik", "Data"};
+        JPanel header = new JPanel(new GridLayout(1, columnsName.length));
+        for (String name : columnsName){
+            header.add(new JLabel(name));
+        }
+        JPanel elementsPanel = new JPanel(new GridLayout());
+        LinkedList<JPanel> matchesPanels = new LinkedList<JPanel>();
+        for (Match match : matches){
+            JPanel matchPanel = new JPanel(new GridLayout(1, 6));
+            matchPanel.add(new JLabel(match.firstTeamName));
+            matchPanel.add(new JLabel(match.secondTeamName));
+            matchPanel.add(new JLabel(match.location));
+            matchPanel.add(new JLabel(match.score));
+            matchPanel.add(new JLabel(dateFormat.format(match.date)));
+            matchesPanels.add(matchPanel);
+        }
+
+        for (JPanel matchPanel : matchesPanels){
+            elementsPanel.add(matchPanel);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(elementsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        matchesPanel.add(header, BorderLayout.PAGE_START);
+        matchesPanel.add(scrollPane, BorderLayout.CENTER);
+
+        return matchesPanel;
+    }
+
+    private JPanel playerDataPanel(int playerIndex){
+        FullPlayer player = dataProvider.getPlayer(playerIndex);
+        JPanel dataPanel = new JPanel(new GridLayout(7, 1));
+        dataPanel.add(new JLabel("Imię " + player.firstName));
+        dataPanel.add(new JLabel("Nazwisko " + player.lastName));
+        dataPanel.add(new JLabel("Zespół " + player.teamName));
+        dataPanel.add(new JLabel("Pochodzenie " + player.origin));
+        dataPanel.add(new JLabel("Wzrost " + player.height));
+        dataPanel.add(new JLabel("Waga " + player.weight));
+        dataPanel.add(new JLabel("Wiek " + player.age));
+
+        return dataPanel;
     }
 }
