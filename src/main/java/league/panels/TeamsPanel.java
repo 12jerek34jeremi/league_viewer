@@ -29,15 +29,54 @@ public class TeamsPanel extends LeagueViewingPanel{
         return (IndexButton) ((JPanel) elementsPanel.getComponent(0)).getComponent(1);
     }
 
-    //Ta metoda jest tylko tymczasowa, żeby sprawdzic czy dziala, nalezy ja napisac od nowa.
     @Override
     void launchNewWindow(int teamIndex){
         System.out.println("W Teams, zostałem kliknięty");
         System.out.println("Indeks druzyny to: " + teamIndex);
+        FullTeam team = dataProvider.getTeam(teamIndex);
 
-        JFrame frame = new JFrame("Test");
-        frame.setSize(600, 600);
-        frame.add(new JLabel("To jest okno z drużyną, które implementuje Paweł."));
+        JFrame frame = new JFrame(team.teamName);
+        JPanel teamDataPanel = teamDataPanel(team);
+        JPanel teamPlayerPanel = teamPlayerPanel(team);
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        tabbedPane.add("Informacje", teamDataPanel);
+        tabbedPane.add("Zawodnicy", teamPlayerPanel);
+        frame.add(tabbedPane);
+
+        frame.setSize(300, 300);
+
         frame.setVisible(true);
     }
+
+    private JPanel teamDataPanel(FullTeam team){
+        JPanel teamData = new JPanel();
+        teamData.add(new JLabel("Nazwa: " + team.teamName));
+        teamData.add(new JLabel("Kraj: " + team.origins));
+        return teamData;
+    }
+
+    private JPanel teamPlayerPanel(FullTeam team){
+        JPanel teamPlayerPanel = new JPanel();
+        int teamId = team.teamID;
+        JPanel elementsPanel = new JPanel(new GridLayout(20, 1));
+        SimplePlayer[] players = dataProvider.getPlayers();
+        for (SimplePlayer player : players){
+            if (player.teamId == teamId){
+                JPanel data = new JPanel();
+                data.add(new JLabel(player.firstName));
+                data.add(new JLabel(player.lastName));
+                elementsPanel.add(data);
+            }
+        }
+        JPanel header = new JPanel();
+        header.add(new JLabel("Imię"));
+        header.add(new JLabel("Nazwisko"));
+
+        teamPlayerPanel.add(header, BorderLayout.PAGE_START);
+        teamPlayerPanel.add(elementsPanel, BorderLayout.CENTER);
+
+        return teamPlayerPanel;
+    }
+
 }
