@@ -37,15 +37,27 @@ public class MatchesPanel extends LeagueViewingPanel{
         return (IndexButton) ((JPanel) elementsPanel.getComponent(0)).getComponent(5);
     }
 
-    //Ta metoda jest tylko tymczasowa, żeby sprawdzic czy dziala, nalezy ja napisac od nowa.
     @Override
     void launchNewWindow(int matchIndex){
         System.out.println("W Matches, zostałem kliknięty.");
         System.out.println("Indeks meczu to: " + matchIndex);
 
-        JFrame frame = new JFrame("Test");
-        frame.setSize(600, 600);
-        frame.add(new JLabel("To jest okno z meczem, które implementuje Paweł."));
+        Match match = dataProvider.getMatch(matchIndex);
+        JFrame frame = new JFrame(match.firstTeamName + " vs " + match.secondTeamName);
+        frame.setSize(300, 300);
+        JPanel matchPanel = matchDataPanel(match);
+        frame.add(matchPanel);
         frame.setVisible(true);
+    }
+
+    private JPanel matchDataPanel(Match match){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        JPanel matchPanel = new JPanel(new GridLayout(5, 1));
+        matchPanel.add(new JLabel("Drużyna A: " + match.firstTeamName));
+        matchPanel.add(new JLabel("Drużyna B: " + match.secondTeamName));
+        matchPanel.add(new JLabel("Lokalizacja: " + match.location));
+        matchPanel.add(new JLabel("Wynik: " + match.score));
+        matchPanel.add(new JLabel("Data: " + dateFormat.format(match.date)));
+        return matchPanel;
     }
 }
