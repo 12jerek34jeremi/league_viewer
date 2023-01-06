@@ -35,17 +35,16 @@ public class PlayersPanel extends LeagueViewingPanel{
     }
 
  
-    @Override
     void launchNewWindow(int playerIndex){
         System.out.println("W Players, zostałem kliknięty.");
         System.out.println("Indeks gracza to: " + playerIndex);
 
         JFrame frame = new JFrame("Zawodnik " + playerIndex);
 
-        Match[] matches = findMatches(playerIndex);
+        Match[] matches = findMatches(playerIndex, frame);
         JPanel playerMatchesPanel = playerMatchesPanel(matches);
 
-        JPanel playerDataPanel = playerDataPanel(playerIndex);
+        JPanel playerDataPanel = playerDataPanel(playerIndex, frame);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Informacje", playerDataPanel);
@@ -55,10 +54,12 @@ public class PlayersPanel extends LeagueViewingPanel{
         frame.setVisible(true);
     }
 
-    private Match[] findMatches(int playerIndex){
+    private Match[] findMatches(int playerIndex, JFrame frame){
         FullPlayer player = dataProvider.getPlayer(playerIndex);
+        if(player == null) showMessageAndExit(frame);
         int teamId = player.teamId;
         FullTeam team = dataProvider.getTeam(teamId);
+        if(team == null) showMessageAndExit(frame);
         return team.matches;
     }
 
@@ -84,6 +85,7 @@ public class PlayersPanel extends LeagueViewingPanel{
 
         for (JPanel matchPanel : matchesPanels){
             elementsPanel.add(matchPanel);
+            System.out.println("dodaję panel z meczem");
         }
 
         JScrollPane scrollPane = new JScrollPane(elementsPanel);
@@ -96,8 +98,9 @@ public class PlayersPanel extends LeagueViewingPanel{
         return matchesPanel;
     }
 
-    private JPanel playerDataPanel(int playerIndex){
+    private JPanel playerDataPanel(int playerIndex, JFrame frame){
         FullPlayer player = dataProvider.getPlayer(playerIndex);
+        if(player == null) showMessageAndExit(frame);
         JPanel dataPanel = new JPanel(new GridLayout(7, 1));
         dataPanel.add(new JLabel("Imię " + player.firstName));
         dataPanel.add(new JLabel("Nazwisko " + player.lastName));
@@ -108,5 +111,10 @@ public class PlayersPanel extends LeagueViewingPanel{
         dataPanel.add(new JLabel("Wiek " + player.age));
 
         return dataPanel;
+    }
+
+    private void showMessageAndExit(JFrame frame){
+        JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
+        System.exit(0);
     }
 }
