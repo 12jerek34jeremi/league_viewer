@@ -1,7 +1,7 @@
 package league.panels;
 
 import league.conectivity.DataProvider;
-import league.types.SimpleTeam;
+import league.types.*;
 import javax.swing.*;
 import java.awt.*;
 
