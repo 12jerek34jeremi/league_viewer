@@ -10,7 +10,7 @@ public class InputData {
             return null;
         try {
             // getting country_id by its name from database
-            String getCountryId = "select country_id from countries where name like '"+ countryName + " '";
+            String getCountryId = "SELECT country_id FROM countries WHERE name like '"+ countryName + " '";
             PreparedStatement stmt = con.prepareStatement(getCountryId);
             ResultSet rs = stmt.executeQuery(getCountryId);
             int countryId = 0;
@@ -18,7 +18,7 @@ public class InputData {
                 countryId = rs.getInt(1);
             
             // finding the biggest player_id and increasing the value by 1
-            String getPlayerId = "select max(player_id) from players";
+            String getPlayerId = "SELECT max(player_id) FROM players";
             stmt = con.prepareStatement(getPlayerId);
             rs = stmt.executeQuery(getPlayerId);
             int playerId = 0;
@@ -27,7 +27,7 @@ public class InputData {
             playerId += 1;
 
             // getting team_id by its name from database
-            String get_team_id = "select team_id from teams where name = '" + teamName + "'";
+            String get_team_id = "SELECT team_id FROM teams WHERE name = '" + teamName + "'";
             stmt = con.prepareStatement(get_team_id);
             rs = stmt.executeQuery(get_team_id);
             int teamId = 0;
@@ -63,7 +63,7 @@ public class InputData {
             return null;
         try {
             // finding the biggest team_id and increasing the value by 1
-            String getTeamId = "select max(team_id) from teams";
+            String getTeamId = "SELECT max(team_id) FROM teams";
             PreparedStatement stmt = con.prepareStatement(getTeamId);
             ResultSet rs = stmt.executeQuery(getTeamId);
             int teamId = 0;
@@ -72,7 +72,7 @@ public class InputData {
             teamId += 1;
 
             // getting country_id by its name 
-            String get_country_id = "select country_id from countries where name like '"+ countryName + " '";
+            String get_country_id = "SELECT country_id FROM countries WHERE name like '"+ countryName + " '";
             stmt = con.prepareStatement(get_country_id);
             rs = stmt.executeQuery(get_country_id);
             int countryId = 0;
@@ -102,14 +102,14 @@ public class InputData {
             return null;
         try {
             // getting ids of the two teams from database
-            String getTeam1Id = "select team_id from teams where name = '" + team1Name + "'";
+            String getTeam1Id = "SELECT team_id FROM teams WHERE name = '" + team1Name + "'";
             PreparedStatement stmt = con.prepareStatement(getTeam1Id);
             ResultSet rs = stmt.executeQuery(getTeam1Id);
             int team1Id = 0;
             if(rs.next())
                 team1Id = rs.getInt(1);
 
-            String get_team2_id = "select team_id from teams where name = '" + team2Name + "'";
+            String get_team2_id = "SELECT team_id FROM teams WHERE name = '" + team2Name + "'";
             stmt = con.prepareStatement(get_team2_id);
             rs = stmt.executeQuery(get_team2_id);
             int team2Id = 0;
@@ -117,7 +117,7 @@ public class InputData {
                 team2Id = rs.getInt(1);
 
             // getting stadium_id by its name
-            String get_stadium_id = "select stadium_id from stadiums where name = '" + stadiumName + "'";
+            String get_stadium_id = "SELECT stadium_id FROM stadiums WHERE name = '" + stadiumName + "'";
             stmt = con.prepareStatement(get_stadium_id);
             rs = stmt.executeQuery(get_stadium_id);
             int stadiumId = 0;
@@ -125,7 +125,7 @@ public class InputData {
                 stadiumId = rs.getInt(1);
 
             // finding the biggest match_id in the database and increasing by 1
-            String getMatchId = "select max(match_id) from matches";
+            String getMatchId = "SELECT max(match_id) FROM matches";
             stmt = con.prepareStatement(getMatchId);
             rs = stmt.executeQuery(getMatchId);
             int matchId = 0;
@@ -161,6 +161,32 @@ public class InputData {
         }
         return null;
     }
+    public static Connection inputLeague(String name){
+        Connection con = BaseConector.getConnection();
+        if(con == null)
+            return null;
+        try {
+            String getLeagueId = "SELECT max(league_id) FROM leagues";
+            PreparedStatement stmt = con.prepareStatement(getLeagueId);
+            ResultSet rs = stmt.executeQuery(getLeagueId);
+            int leagueId = 0;
+            if(rs.next())
+                leagueId = rs.getInt(1);
+            leagueId += 1;
 
-
+            String queryToLeagues = "INSERT INTO leagues (league_id, name) VALUES (?, ?)";
+            stmt = con.prepareStatement(queryToLeagues);
+            stmt.setInt(1, leagueId);
+            stmt.setString(2, name);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
+        } finally {
+            try { con.close(); }
+            catch (Exception e) { }
+        }
+        return null;
+    }
 }
+
