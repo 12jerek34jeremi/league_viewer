@@ -37,7 +37,7 @@ public class TeamsPanel extends LeagueViewingPanel{
 
         JFrame frame = new JFrame(team.teamName);
         JPanel teamDataPanel = teamDataPanel(team);
-        JPanel teamPlayerPanel = teamPlayerPanel(team);
+        JPanel teamPlayerPanel = teamPlayerPanel(team, frame);
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.add("Informacje", teamDataPanel);
@@ -56,11 +56,12 @@ public class TeamsPanel extends LeagueViewingPanel{
         return teamData;
     }
 
-    private JPanel teamPlayerPanel(FullTeam team){
+    private JPanel teamPlayerPanel(FullTeam team, JFrame frame){
         JPanel teamPlayerPanel = new JPanel();
         int teamId = team.teamID;
         JPanel elementsPanel = new JPanel(new GridLayout(20, 1));
         SimplePlayer[] players = dataProvider.getPlayers();
+        if(players == null) showMessageAndExit(frame);
         for (SimplePlayer player : players){
             if (player.teamId == teamId){
                 JPanel data = new JPanel();
@@ -79,4 +80,8 @@ public class TeamsPanel extends LeagueViewingPanel{
         return teamPlayerPanel;
     }
 
+    private void showMessageAndExit(JFrame frame){
+        JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
+        System.exit(0);
+    }
 }
