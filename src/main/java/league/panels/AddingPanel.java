@@ -34,143 +34,7 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
         layoutsNames = new String[]{"newPlayerPanel", "newMatchPanel",  "newTeamPanel",  " newLeaguePanel"};
 
         //CONTAINERS CREATIONS:
-        newPlayerPanel = new InputsPanel(
-            new String[]{"Podaj imię", "Podaj nazwisko"},
-            new String[]{"Podaj wiek", "Podaj wzrost", "Podaj wage"},
-            new String[]{"Wybierz drużynę"},
-            "Wprowadz zawodnika do systemu",
-            25,
-            15,
-            ((textFields, spinners, autoComboBoxes) ->{
-                if(dataProvider == null) return "Wybierz lige aby wybrać zawodnika.";
-
-                String name = textFields[0].getText(), lastName = textFields[1].getText(),
-                    ageS  = spinners[0].getValue().toString(), heightS = spinners[1].getValue().toString(),
-                    weightS = spinners[2].getValue().toString();
-                    Object selectedTeam = autoComboBoxes[0].getSelectedItem();
-
-                if(name.isEmpty() || lastName.isEmpty()) return "Wprowadz imie i nazwisko!";
-
-                if(!StringUtils.isAlphaSpace(name)) return "Nieprawidłowe imię!";
-                if(!StringUtils.isAlphaSpace(lastName)) return "Nieprawidłowe nazwisko!";
-
-                int age, height, weight;
-
-                try { age = Integer.parseInt(ageS); }catch (Exception e){ return "Wiek nie jest liczbą naturalną!"; }
-                try { height = Integer.parseInt(heightS); }catch (Exception e){ return "Wzrost nie jest liczbą naturalną!"; }
-                try { weight = Integer.parseInt(weightS); }catch (Exception e){ return "Waga nie jest liczbą! naturalną"; }
-
-                if(age < 3 || age > 85) return "Wiek zawodnika musi należeć do <3, 85>";
-                if(height < 100 || height > 250) return "Wzrost zawodnika musi należeć do <100, 250>";
-                if(weight < 30 || weight > 225) return "Waga zawodnika musi należeć do <30, 225>";
-
-                if(selectedTeam == null) return "Wybierz drużnę.";
-
-                Indexer team = findIndexer(dataProvider.getTeams(), selectedTeam.toString());
-                if(team == null) return "Wyierz istniejącą drużynę!";
-
-                System.out.println("Do systemu zostanie wprowadzony zawodnik: \n" +
-                        "imie: " + name + ", nazwisko: " + lastName + "\n" +
-                        "wiek: " + ageS + ", wzrost " + heightS + ", waga" + weightS + "\n"
-                        + "drużyna (id / name): " + team.toIndex() + "/" +  team.toString()
-                );
-
-                return null;
-            })
-        );
-
-        newMatchPanel = new InputsPanel(
-            new String[]{"Data meczu (format YYYY-MM-YY)"},
-            new String[]{"Bramki drużyny pierwszej", "Bramki drużyny drugiej"},
-            new String[]{"Wybierz pierwszą drużynę", "Wybierz drugą drużynę", "Wybierz stadion"},
-            "Dodaj nowy mecz do ligi.",
-            25,
-            15,
-            (textFields, spinners, autoComboBoxes) -> {
-                if(dataProvider == null) return "Wybierz ligę aby wprowadzić nowy mecz do ligi.";
-
-                String dateS = textFields[0].getText(),
-                    firstTeamGoalsS = spinners[0].getValue().toString(), secondTeamGoalsS = spinners[1].getValue().toString();
-                Object firstTeamO = autoComboBoxes[0].getSelectedItem(),
-                    secondTeamO = autoComboBoxes[1].getSelectedItem(),  stadionO = autoComboBoxes[2].getSelectedItem();
-
-                if(dateS.isEmpty()) return "Wprowadz date meczu!";
-                try{
-                    LocalDate.parse(dateS, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                }catch (Exception e){
-                    return "Nie rozumiem tej daty!";
-                }
-
-                int firstTeamGoals, secondTeamGoals;
-                try { firstTeamGoals = Integer.parseInt(firstTeamGoalsS); }
-                    catch (Exception e){ return "Bramki pierwszej drużyny nie są liczbą naturalną!"; }
-                try { secondTeamGoals = Integer.parseInt(secondTeamGoalsS); }
-                    catch (Exception e){ return "Bramki drugiej drużyny nie są liczbą naturalną!"; }
-
-                if(firstTeamGoals<0 || firstTeamGoals>25) return "Aż tyle bramek strzeliła drużyna pierwsza?";
-                if(secondTeamGoals<0 || secondTeamGoals>25) return "Aż tyle bramek strzeliła drużyna druga?";
-
-                if(firstTeamO == null) return "Wybierz pierwszą drużynę";
-                if(secondTeamO == null) return "Wybierz pierwszą drużynę";
-
-                Indexer firstTeam = findIndexer(dataProvider.getTeams(), firstTeamO.toString());
-                if(firstTeam == null) return "Wybierz istniejącą pierwszą drużynę";
-                Indexer secondTeam = findIndexer(dataProvider.getTeams(), secondTeamO.toString());
-                if(secondTeam == null) return "Wybierz istniejącą drugą drużynę";
-                if(firstTeam.toIndex() == secondTeam.toIndex()) return "Drużyna gra sama z sobą?";
-
-                if(stadionO == null) return "Wubierz station.";
-                Indexer stadion = findIndexer(DataProvider.getStadiums(), stadionO.toString());
-                if(stadion == null) return "Wybierz istniejący staion.";
-
-                System.out.println("Do systemu zostanie wprowadzony taki mecz: \n" +
-                    "data: " + dateS + "\n" +
-                    "bramki pierwszej drużyny: " + firstTeamGoals + ", bramkiDrugiej " + secondTeamGoals + "\n" +
-                    "drużyna 1 (id / name): " + firstTeam.toIndex() + "/" +  firstTeam.toString() + "\n" +
-                    "drużyna 2 (id / name): " + secondTeam.toIndex() + "/" +  secondTeam.toString() + "\n" +
-                    "stadion(id / name): " + stadion.toIndex() + "/" +  stadion.toString()
-                );
-
-                return null;
-            }
-        );
-
-
-        newTeamPanel = new InputsPanel(
-            new String[]{"Nazwa drużyny"},
-            null,
-            new String[]{"Wybierz kraj pochodzenia", },
-            "Utwórz nową drużynę.",
-            25,
-            0,
-            (textFields, spinners, autoComboBoxes) -> {
-                String teamName = textFields[0].getText();
-                Object countryO = autoComboBoxes[0].getSelectedItem();
-
-                if (teamName.isEmpty()) return "Wprowadz nazwe druzyny";
-
-                if(countryO == null) return "Wybierz kraj pochodzenia!";
-                Indexer country = findIndexer(DataProvider.getCountries(), countryO.toString());
-                if(country == null) return "Wybierz kraj z listy.";
-
-                System.out.println("Wprowadzone zostana te dane:\n" +
-                    "nazwa drużyny: " + teamName + "\n" +
-                    "kraj poch. (id/nazwa): " + country.toIndex() + " / " + country.toString()
-                );
-
-                return null;
-            }
-        );
-
-        newLeaguePanel = new InputsPanel(
-            new String[]{"Nazwa ligi"},
-            null,
-            null,
-            "Dodaj nowa lige",
-            25,
-            0,
-            (textFields, spinners, autoComboBoxes) -> {return null;}
-        );
+        createInputsPanels();
 
         //CARD LAYOUT CREATION
         cardLayout = new CardLayout();
@@ -192,6 +56,7 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
         //SETTING LISTENERS AND FINISHING:
         actionsBox.addItemListener(this);
         newTeamPanel.changeLeague(new String[][]{indexerToStrings(DataProvider.getCountries())});
+        actionsBox.setSelectedIndex(3);
     }
 
     @Override
@@ -201,6 +66,19 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
 
         newPlayerPanel.changeLeague(new String[][]{teamsNames});
         newMatchPanel.changeLeague(new String[][]{teamsNames, teamsNames, indexerToStrings(DataProvider.getStadiums())});
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        if(itemEvent.getStateChange() == ItemEvent.SELECTED){
+            int index = actionsBox.getSelectedIndex();
+            if( (index == 0 || index == 1) && dataProvider == null)
+                JOptionPane.showMessageDialog(this,
+                        "Aby wybrać tą kartę należy najpierw wybrać ligę z górnego menu.",
+                        "Niewybrana liga", JOptionPane.WARNING_MESSAGE);
+            else
+                cardLayout.show(cardContainer, layoutsNames[index]);
+        }
     }
 
     private static String[] indexerToStrings(Indexer [] indexers){
@@ -218,11 +96,120 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
         return null;
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent itemEvent) {
-        if(itemEvent.getStateChange() == ItemEvent.SELECTED){
-            cardLayout.show(cardContainer, layoutsNames[actionsBox.getSelectedIndex()]);
-            System.out.println("SELECTED!!!");
-        }
+    private void createInputsPanels(){
+        newPlayerPanel = new InputsPanel(
+                new String[]{"Podaj imię", "Podaj nazwisko"},
+                new String[]{"Podaj wiek", "Podaj wzrost", "Podaj wage"},
+                new String[]{"Wybierz drużynę"},
+                "Wprowadz zawodnika do systemu",
+                25,
+                15,
+                ((textFieldsValues, spinnersValues, autoComboBoxesValues) ->{
+                    if(dataProvider == null) return "Wybierz lige aby wybrać zawodnika.";
+
+                    String name = textFieldsValues[0], lastName = textFieldsValues[1];
+                    int age = spinnersValues[0],  height = spinnersValues[1], weight = spinnersValues[2];
+                    String selectedTeam = autoComboBoxesValues[0];
+
+
+                    if(!StringUtils.isAlphaSpace(name)) return "Nieprawidłowe imię!";
+                    if(!StringUtils.isAlphaSpace(lastName)) return "Nieprawidłowe nazwisko!";
+
+                    if(age < 3 || age > 85) return "Wiek zawodnika musi należeć do <3, 85>";
+                    if(height < 100 || height > 250) return "Wzrost zawodnika musi należeć do <100, 250>";
+                    if(weight < 30 || weight > 225) return "Waga zawodnika musi należeć do <30, 225>";
+
+
+                    Indexer team = findIndexer(dataProvider.getTeams(), selectedTeam.toString());
+                    if(team == null) return "Wybierz istniejącą drużynę!";
+
+                    System.out.println("Do systemu zostanie wprowadzony zawodnik: \n" +
+                            "imie: " + name + ", nazwisko: " + lastName + "\n" +
+                            "wiek: " + age + ", wzrost " + height + ", waga" + weight + "\n"
+                            + "drużyna (id / name): " + team.toIndex() + "/" +  team.toString()
+                    );
+
+                    return null;
+                })
+        );
+
+        newMatchPanel = new InputsPanel(
+                new String[]{"Data meczu (format YYYY-MM-YY)"},
+                new String[]{"Bramki drużyny pierwszej", "Bramki drużyny drugiej"},
+                new String[]{"Wybierz pierwszą drużynę", "Wybierz drugą drużynę", "Wybierz stadion"},
+                "Dodaj nowy mecz do ligi.",
+                25,
+                15,
+                (textFieldsValues, spinnersValues, autoComboBoxesValues) -> {
+                    if(dataProvider == null) return "Wybierz ligę aby wprowadzić nowy mecz do ligi.";
+
+                    String dateS = textFieldsValues[0];
+                    int firstTeamGoals = spinnersValues[0], secondTeamGoals = spinnersValues[1];
+                    String firstTeamS = autoComboBoxesValues[0], secondTeamS = autoComboBoxesValues[1],
+                            stadionS = autoComboBoxesValues[2];
+
+                    try{
+                        LocalDate.parse(dateS, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    }catch (Exception e){
+                        return "Nie rozumiem tej daty!";
+                    }
+
+                    if(firstTeamGoals<0 || firstTeamGoals>25) return "Aż tyle bramek strzeliła drużyna pierwsza?";
+                    if(secondTeamGoals<0 || secondTeamGoals>25) return "Aż tyle bramek strzeliła drużyna druga?";
+
+                    Indexer firstTeam = findIndexer(dataProvider.getTeams(), firstTeamS);
+                    if(firstTeam == null) return "Wybierz istniejącą pierwszą drużynę";
+                    Indexer secondTeam = findIndexer(dataProvider.getTeams(), secondTeamS);
+                    if(secondTeam == null) return "Wybierz istniejącą drugą drużynę";
+                    if(firstTeam.toIndex() == secondTeam.toIndex()) return "Drużyna gra sama z sobą?";
+
+                    Indexer stadion = findIndexer(DataProvider.getStadiums(), stadionS);
+                    if(stadion == null) return "Wybierz istniejący stadion.";
+
+                    System.out.println("Do systemu zostanie wprowadzony taki mecz: \n" +
+                            "data: " + dateS + "\n" +
+                            "bramki pierwszej drużyny: " + firstTeamGoals + ", bramkiDrugiej " + secondTeamGoals + "\n" +
+                            "drużyna 1 (id / name): " + firstTeam.toIndex() + "/" +  firstTeam.toString() + "\n" +
+                            "drużyna 2 (id / name): " + secondTeam.toIndex() + "/" +  secondTeam.toString() + "\n" +
+                            "stadion(id / name): " + stadion.toIndex() + "/" +  stadion.toString()
+                    );
+
+                    return null;
+                }
+        );
+
+
+        newTeamPanel = new InputsPanel(
+                new String[]{"Nazwa drużyny"},
+                null,
+                new String[]{"Wybierz kraj pochodzenia", },
+                "Utwórz nową drużynę.",
+                25,
+                0,
+                (textFieldsValues, spinnersValues, autoComboBoxesValues) -> {
+                    String teamName = textFieldsValues[0];
+                    String countryS = autoComboBoxesValues[0];
+
+                    Indexer country = findIndexer(DataProvider.getCountries(), countryS);
+                    if(country == null) return "Wybierz kraj z listy.";
+
+                    System.out.println("Wprowadzone zostana te dane:\n" +
+                            "nazwa drużyny: " + teamName + "\n" +
+                            "kraj poch. (id/nazwa): " + country.toIndex() + " / " + country.toString()
+                    );
+
+                    return null;
+                }
+        );
+
+        newLeaguePanel = new InputsPanel(
+                new String[]{"Nazwa ligi"},
+                null,
+                null,
+                "Dodaj nowa lige",
+                25,
+                0,
+                (textFieldsValues, spinnersValues, autoComboBoxesValues) -> {return null;}
+        );
     }
 }
