@@ -78,10 +78,12 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
     public void itemStateChanged(ItemEvent itemEvent) {
         if(itemEvent.getStateChange() == ItemEvent.SELECTED){
             int index = actionsBox.getSelectedIndex();
-            if( (index == 0 || index == 1) && dataProvider == null)
+            if(dataProvider == null && (index == 0 || index == 1 || index == 2)) {
                 JOptionPane.showMessageDialog(this,
                         "Aby wybrać tą kartę należy najpierw wybrać ligę z górnego menu.",
                         "Niewybrana liga", JOptionPane.WARNING_MESSAGE);
+                actionsBox.setSelectedIndex(3);
+            }
             else
                 cardLayout.show(cardContainer, layoutsNames[index]);
         }
@@ -236,14 +238,14 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
                         );
 
                         return new Pair<>(null, new Pair<>(
-                                new int[]{},
+                                new int[]{dataProvider.getLeagueId()},
                                 new String[]{teamName, teamAcronym, country.toString()}
                         ));
                     }
 
                     @Override
                     public boolean insertData(int[] i, String[] s) {
-                        return InputData.inputTeam(s[0], s[1], s[2]);
+                        return InputData.inputTeam(i[0] ,s[0], s[1], s[2]);
                     }
                 }
         );
