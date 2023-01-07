@@ -58,7 +58,7 @@ public class InputData {
         return true;
     }
 
-    public static boolean inputTeam(String name, String acronym, String countryName) {
+    public static boolean inputTeam(int leagueId, String name, String acronym, String countryName) {
         Connection con = BaseConector.getConnection();
         if(con == null)
             return false;
@@ -87,6 +87,13 @@ public class InputData {
             stmt.setString(3, acronym);
             stmt.setInt(4, countryId);
             stmt.executeUpdate();
+
+            query = "INSERT INTO team_plays_in_league (team_id, league_id) VALUES (?, ?)";
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, teamId);
+            stmt.setInt(2, leagueId);
+            stmt.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
@@ -97,7 +104,7 @@ public class InputData {
         }
         return true;
     }
-    public static boolean inputMatch( int goals1, int goals2, int leagueId, String date, String team1Name, String team2Name, String stadiumName) {
+    public static boolean inputMatch(int goals1, int goals2, int leagueId, String date, String team1Name, String team2Name, String stadiumName) {
         // you need to pass the league_id from calling function
         Connection con = BaseConector.getConnection();
         if(con == null)
