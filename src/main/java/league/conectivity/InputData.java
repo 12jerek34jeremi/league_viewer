@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class InputData {
-    public static Connection inputPlayer(String name, String surname, String birthDate, int height, int weight, String countryName, String teamName) {
+    public static boolean inputPlayer(String name, String surname, String birthDate, int height, int weight, String countryName, String teamName) {
         Connection con = BaseConector.getConnection();
         if (con == null)
-            return null;
+            return false;
         try {
             // getting country_id by its name from database
             String getCountryId = "SELECT country_id FROM countries WHERE name like '"+ countryName + " '";
@@ -50,17 +50,18 @@ public class InputData {
             e.printStackTrace();
             // Prints what exception has been thrown
             System.out.println(e);
+            return false;
         } finally {
             try { con.close(); } 
             catch (Exception e) { }
         }
-        return null;
+        return true;
     }
 
-    public static Connection inputTeam(String name, String acronym, String countryName) {
+    public static boolean inputTeam(String name, String acronym, String countryName) {
         Connection con = BaseConector.getConnection();
         if(con == null)
-            return null;
+            return false;
         try {
             // finding the biggest team_id and increasing the value by 1
             String getTeamId = "SELECT max(team_id) FROM teams";
@@ -89,17 +90,18 @@ public class InputData {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
+            return false;
         } finally {
             try { con.close(); }
             catch (Exception e) { }
         }
-        return null;
+        return true;
     }
-    public static Connection inputMatch(String date, int goals1, int goals2, String team1Name, String team2Name, String stadiumName, int leagueId) {
+    public static boolean inputMatch(String date, int goals1, int goals2, String team1Name, String team2Name, String stadiumName, int leagueId) {
         // you need to pass the league_id from calling function
         Connection con = BaseConector.getConnection();
         if(con == null)
-            return null;
+            return false;
         try {
             // getting ids of the two teams from database
             String getTeam1Id = "SELECT team_id FROM teams WHERE name = '" + team1Name + "'";
@@ -155,16 +157,17 @@ public class InputData {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
+            return false;
         } finally {
             try { con.close(); }
             catch (Exception e) { }
         }
-        return null;
+        return true;
     }
-    public static Connection inputLeague(String name){
+    public static boolean inputLeague(String name){
         Connection con = BaseConector.getConnection();
         if(con == null)
-            return null;
+            return false;
         try {
             String getLeagueId = "SELECT max(league_id) FROM leagues";
             PreparedStatement stmt = con.prepareStatement(getLeagueId);
@@ -182,11 +185,12 @@ public class InputData {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
+            return false;
         } finally {
             try { con.close(); }
             catch (Exception e) { }
         }
-        return null;
+        return true;
     }
 }
 
