@@ -5,7 +5,7 @@ public class FullPlayer extends  PlayerBase{
     public String origin;
 
     public FullPlayer(int playerId, int teamId, int age,
-                      int height, int weight,
+                      int weight, int height,
                       String firstName, String lastName, String teamName, String origin) {
         super(playerId, teamId, firstName, lastName, teamName);
         this.age = age;
