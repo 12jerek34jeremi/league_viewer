@@ -50,32 +50,42 @@ public class TeamsPanel extends LeagueViewingPanel{
     }
 
     private JPanel teamDataPanel(FullTeam team){
-        JPanel teamData = new JPanel();
+        JPanel teamData = new JPanel(new GridLayout(2, 1));
         teamData.add(new JLabel("Nazwa: " + team.teamName));
         teamData.add(new JLabel("Kraj: " + team.origins));
         return teamData;
     }
 
     private JPanel teamPlayerPanel(FullTeam team, JFrame frame){
-        JPanel teamPlayerPanel = new JPanel();
+        JPanel teamPlayerPanel = new JPanel(new BorderLayout());
         int teamId = team.teamID;
-        JPanel elementsPanel = new JPanel(new GridLayout(20, 1));
+        JPanel elementsPanel = new JPanel();
+        BoxLayout elementsPanelLayout = new BoxLayout(elementsPanel, BoxLayout.PAGE_AXIS);
+        elementsPanel.setLayout(elementsPanelLayout);
         SimplePlayer[] players = dataProvider.getPlayers();
+
         if(players == null) showMessageAndExit(frame);
+
         for (SimplePlayer player : players){
             if (player.teamId == teamId){
-                JPanel data = new JPanel();
+                JPanel data = new JPanel(new GridLayout(1, 2));
                 data.add(new JLabel(player.firstName));
                 data.add(new JLabel(player.lastName));
                 elementsPanel.add(data);
             }
         }
-        JPanel header = new JPanel();
+
+        JPanel header = new JPanel(new GridLayout(1, 2));
         header.add(new JLabel("Imię"));
         header.add(new JLabel("Nazwisko"));
 
+
+        JScrollPane scrollPane = new JScrollPane(elementsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         teamPlayerPanel.add(header, BorderLayout.PAGE_START);
-        teamPlayerPanel.add(elementsPanel, BorderLayout.CENTER);
+        teamPlayerPanel.add(scrollPane, BorderLayout.CENTER);
 
         return teamPlayerPanel;
     }
