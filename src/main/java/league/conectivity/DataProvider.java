@@ -64,6 +64,7 @@ public class DataProvider {
     public SimpleTeam[] getTeams() { return teams; }
     public static Stadium[] getStadiums(){return stadiums;}
     public static Country[] getCountries() { return countries; }
+    public int getLeagueId(){ return league_id; }
 
     public FullPlayer getPlayer(int player_id){
         /* This method tries to download from database all information regarding player of given id.

@@ -10,6 +10,8 @@ class InputsPanel extends JPanel {
     private JTextField[] textFields = null;
     private JSpinner[] spinners = null;
     private AutoComboBox[] autoComboBoxes;
+    private  JLabel messageLabel;
+    private JButton button;
     private final Validator validator;
     private final String[] textFieldsLabels, spinnersLabels, autoComboBoxesLabels;
 
@@ -45,8 +47,9 @@ class InputsPanel extends JPanel {
             }
         }
 
-        JButton button = new JButton(buttonLabel);
+        button = new JButton(buttonLabel);
         button.addActionListener(action -> {
+            //CHECK IF EVERYTHING IS FILLED
             Pair<String, Triplet<String[], int[], String[]>> filledCheck = checkIfFilled();
             if(filledCheck.getValue0() != null){
                 JOptionPane.showMessageDialog(this, filledCheck.getValue0(),
@@ -54,28 +57,49 @@ class InputsPanel extends JPanel {
                 return;
             }
 
+            //CHECK IF DATA IS CORRECT
             Triplet<String[], int[], String[]> inputsValues = filledCheck.getValue1();
-            String validationResult = validator.check(inputsValues.getValue0(), inputsValues.getValue1(),
-                    inputsValues.getValue2());
+            Pair<String, Pair<int[], String[]>> validationCheck =
+                    validator.check(inputsValues.getValue0(), inputsValues.getValue1(), inputsValues.getValue2());
 
-            if(validationResult == null){
-                System.out.println("Tutaj jest wprowadzanie danych pisane jeszcze przez Zuzię.");
+            //SHOW MESSAGE INDICATING WRONG DATA OR TRY TO INSERT DATA TO DATABASE
+            if(validationCheck.getValue0() == null){
+                button.setEnabled(false);
+                messageLabel.setText("Prosze czekać, wprowadzam dane.");
+                Pair<int[], String[]> dataToInsert = validationCheck.getValue1();
+                boolean success = validator.insertData(dataToInsert.getValue0(), dataToInsert.getValue1());
+                if(success) {
+                    JOptionPane.showMessageDialog(this, "Dane wprowadzone pomyślnie,",
+                            "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                }else {
+                    JOptionPane.showMessageDialog(this,
+                            "Wystąpił błąd przy wprowadzaniu danych. Sprawdź połączenie i próbuj ponownie póżniej.",
+                            "Porażka", JOptionPane.INFORMATION_MESSAGE);
+                }
+                button.setEnabled(true);
+                messageLabel.setText("");
             }else{
-                JOptionPane.showMessageDialog(this, validationResult,
+                JOptionPane.showMessageDialog(this, validationCheck.getValue0(),
                         "Nieprawidłowe dane", JOptionPane.WARNING_MESSAGE);
             }
         });
         add(button);
+
+        messageLabel = new JLabel("");
+        add(messageLabel);
     }
 
     public void changeLeague(String[][] autoComboBoxesItems){
         for(int i =0; i< autoComboBoxesItems.length; i++){
-            autoComboBoxes[i].setKeyWord(autoComboBoxesItems[i]);
+            if(autoComboBoxesItems[i] != null)
+                autoComboBoxes[i].setKeyWord(autoComboBoxesItems[i]);
         }
     }
 
     public interface Validator{
-        public String check(String[] textFieldsValues, int[] spinnersValues, String[] autoComboBoxesValues);
+        public Pair<String, Pair<int[], String[]>> check(String[] textFieldsValues, int[] spinnersValues, String[] autoComboBoxesValues);
+
+        public boolean insertData(int[] ints, String[] strings);
     }
 
     private Pair<String, Triplet<String[], int[], String[]>> checkIfFilled(){

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class InputData {
-    public static boolean inputPlayer(String name, String surname, String birthDate, int height, int weight, String countryName, String teamName) {
+    public static boolean inputPlayer(int height, int weight, String name, String surname, String birthDate, String countryName, String teamName) {
         Connection con = BaseConector.getConnection();
         if (con == null)
             return false;
@@ -97,7 +97,7 @@ public class InputData {
         }
         return true;
     }
-    public static boolean inputMatch(String date, int goals1, int goals2, String team1Name, String team2Name, String stadiumName, int leagueId) {
+    public static boolean inputMatch( int goals1, int goals2, int leagueId, String date, String team1Name, String team2Name, String stadiumName) {
         // you need to pass the league_id from calling function
         Connection con = BaseConector.getConnection();
         if(con == null)
@@ -193,4 +193,3 @@ public class InputData {
         return true;
     }
 }
-
