@@ -6,8 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-
 public class PlayersPanel extends LeagueViewingPanel{
 
     public PlayersPanel(){
@@ -36,13 +34,13 @@ public class PlayersPanel extends LeagueViewingPanel{
 
         return (IndexButton) ((JPanel) elementsPanel.getComponent(0)).getComponent(3);
     }
-
  
+    @Override
     void launchNewWindow(int playerIndex){
         System.out.println("W Players, zostałem kliknięty.");
         System.out.println("Indeks gracza to: " + playerIndex);
 
-        JFrame frame = new JFrame("Zawodnik " + playerIndex);
+        JFrame frame = new JFrame();
 
         Match[] matches = findMatches(playerIndex, frame);
         JPanel playerMatchesPanel = playerMatchesPanel(matches);
@@ -67,15 +65,19 @@ public class PlayersPanel extends LeagueViewingPanel{
     }
 
     private JPanel playerMatchesPanel(Match[] matches){
-        JPanel matchesPanel = new JPanel();
+        JPanel matchesPanel = new JPanel(new BorderLayout());
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         String[] columnsName = {"Drużyna A", "Drużyna B", "Lokacja", "Wynik", "Data"};
         JPanel header = new JPanel(new GridLayout(1, columnsName.length));
+
         for (String name : columnsName){
             header.add(new JLabel(name));
         }
-        JPanel elementsPanel = new JPanel(new GridLayout());
-        LinkedList<JPanel> matchesPanels = new LinkedList<JPanel>();
+
+        JPanel elementsPanel = new JPanel();
+        BoxLayout elementsPanelLayout = new BoxLayout(elementsPanel, BoxLayout.PAGE_AXIS);
+        elementsPanel.setLayout(elementsPanelLayout);
+
         for (Match match : matches){
             JPanel matchPanel = new JPanel(new GridLayout(1, 6));
             matchPanel.add(new JLabel(match.firstTeamName));
@@ -83,12 +85,7 @@ public class PlayersPanel extends LeagueViewingPanel{
             matchPanel.add(new JLabel(match.location));
             matchPanel.add(new JLabel(match.score));
             matchPanel.add(new JLabel(dateFormat.format(match.date)));
-            matchesPanels.add(matchPanel);
-        }
-
-        for (JPanel matchPanel : matchesPanels){
             elementsPanel.add(matchPanel);
-            System.out.println("dodaję panel z meczem");
         }
 
         JScrollPane scrollPane = new JScrollPane(elementsPanel);
@@ -105,14 +102,14 @@ public class PlayersPanel extends LeagueViewingPanel{
         FullPlayer player = dataProvider.getPlayer(playerIndex);
         if(player == null) showMessageAndExit(frame);
         JPanel dataPanel = new JPanel(new GridLayout(7, 1));
-        dataPanel.add(new JLabel("Imię " + player.firstName));
-        dataPanel.add(new JLabel("Nazwisko " + player.lastName));
-        dataPanel.add(new JLabel("Zespół " + player.teamName));
-        dataPanel.add(new JLabel("Pochodzenie " + player.origin));
-        dataPanel.add(new JLabel("Wzrost " + player.height));
-        dataPanel.add(new JLabel("Waga " + player.weight));
-        dataPanel.add(new JLabel("Wiek " + player.age));
-
+        dataPanel.add(new JLabel("Imię: " + player.firstName));
+        dataPanel.add(new JLabel("Nazwisko: " + player.lastName));
+        dataPanel.add(new JLabel("Zespół: " + player.teamName));
+        dataPanel.add(new JLabel("Pochodzenie: " + player.origin));
+        dataPanel.add(new JLabel("Wzrost: " + player.height));
+        dataPanel.add(new JLabel("Waga: " + player.weight));
+        dataPanel.add(new JLabel("Wiek: " + player.age));
+        frame.setTitle(player.firstName + " " + player.lastName);
         return dataPanel;
     }
 
