@@ -18,6 +18,10 @@ public class PlayersPanel extends LeagueViewingPanel{
     @Override
     protected IndexButton fillElementsPanel(DataProvider dataProvider, JPanel elementsPanel){
         SimplePlayer[] players  = dataProvider.getPlayers();
+        if(players.length == 0){
+            elementsPanel.add(new JLabel("W tej lidze nie ma żandych graczy."));
+            return new IndexButton("", -1);
+        }
 
         for(SimplePlayer player : players){
             JPanel playerPanel = new JPanel(new GridLayout(1, 4));

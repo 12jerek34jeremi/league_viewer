@@ -15,6 +15,10 @@ public class TeamsPanel extends LeagueViewingPanel{
     @Override
     protected IndexButton fillElementsPanel(DataProvider dataProvider, JPanel elementsPanel){
         SimpleTeam[] teams  = dataProvider.getTeams();
+        if(teams.length == 0){
+            elementsPanel.add(new JLabel("W tej lidze nie ma żandych drużyn."));
+            return new IndexButton("", -1);
+        }
 
         for(SimpleTeam team : teams){
             JPanel teamsPanel = new JPanel(new GridLayout(1, 2));
