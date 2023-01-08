@@ -16,8 +16,13 @@ public class MatchesPanel extends LeagueViewingPanel{
 
     @Override
     protected IndexButton fillElementsPanel(DataProvider dataProvider, JPanel elementsPanel){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         Match[] matches  = dataProvider.getMatches();
+        if(matches.length == 0){
+            elementsPanel.add(new JLabel("W tej lidze nie ma żandych meczy"));
+            return new IndexButton("", -1);
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 
         for(Match match : matches){
             JPanel matchPanel = new JPanel(new GridLayout(1, 6));
