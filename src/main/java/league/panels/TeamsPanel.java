@@ -37,9 +37,11 @@ public class TeamsPanel extends LeagueViewingPanel{
     void launchNewWindow(int teamIndex){
         System.out.println("W Teams, zostałem kliknięty");
         System.out.println("Indeks druzyny to: " + teamIndex);
+        JFrame frame = new JFrame();
         FullTeam team = dataProvider.getTeam(teamIndex);
+        if (team == null) showMessageAndExit(frame);
 
-        JFrame frame = new JFrame(team.teamName);
+        frame.setTitle(team.teamName);
         JPanel teamDataPanel = teamDataPanel(team);
         JPanel teamPlayerPanel = teamPlayerPanel(team, frame);
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -66,8 +68,8 @@ public class TeamsPanel extends LeagueViewingPanel{
         JPanel elementsPanel = new JPanel();
         BoxLayout elementsPanelLayout = new BoxLayout(elementsPanel, BoxLayout.PAGE_AXIS);
         elementsPanel.setLayout(elementsPanelLayout);
-        SimplePlayer[] players = dataProvider.getPlayers();
 
+        SimplePlayer[] players = dataProvider.getPlayers();
         if(players == null) showMessageAndExit(frame);
 
         for (SimplePlayer player : players){
