@@ -14,7 +14,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 
 public class SwingApp{
-    JMenu menu;
+    JMenu menu, refreshMenu;
     JFrame frame;
     ArrayList<JMenuItem> items;
     HashMap<String, Integer> leaguesData;
@@ -39,6 +39,7 @@ public class SwingApp{
 
         mb = new JMenuBar();
         menu = new JMenu("Wybierz Ligę");
+        refreshMenu = new JMenu("Zaaktualizuj dane");
         items = new ArrayList<>();
         leaguesData = new HashMap<String, Integer>();
 
@@ -50,6 +51,50 @@ public class SwingApp{
         tabbedPane.add("zespoły", leaguePanels[1]);
         tabbedPane.add("zawodnicy", leaguePanels[2]);
         tabbedPane.add("Dodaj", leaguePanels[3]);
+
+        JMenuItem refreshMatches = new JMenuItem("Odśwież mecze");
+        JMenuItem refreshTeams = new JMenuItem("Odśwież zespoły");
+        JMenuItem refreshPlayers = new JMenuItem("Odśwież zawodników");
+        ActionListener refreshListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JMenuItem item = (JMenuItem) e.getSource();
+                if (item == refreshMatches){
+                    if (dataProvider != null){
+                        dataProvider.refreshMatches();
+                        leaguePanels[0].changeLeague(dataProvider);
+                        showSuccessMessage(frame);
+                    } else {
+                        showFailureMessage(frame);
+                    }
+                } else if (item == refreshTeams) {
+                    if (dataProvider != null) {
+                        dataProvider.refreshTeams();
+                        leaguePanels[1].changeLeague(dataProvider);
+                        showSuccessMessage(frame);
+                    } else {
+                        showFailureMessage(frame);
+                    }
+                } else if (item == refreshPlayers) {
+                    if (dataProvider != null) {
+                        dataProvider.refreshPlayers();
+                        leaguePanels[2].changeLeague(dataProvider);
+                        showSuccessMessage(frame);
+                    } else {
+                        showFailureMessage(frame);
+                    }
+                }
+            }
+        };
+
+
+        refreshMatches.addActionListener(refreshListener);
+        refreshTeams.addActionListener(refreshListener);
+        refreshPlayers.addActionListener(refreshListener);
+        refreshMenu.add(refreshMatches);
+        refreshMenu.add(refreshTeams);
+        refreshMenu.add(refreshPlayers);
+
 
         //creating a MenuBar with its items
         for (League league : leagues) {
@@ -78,6 +123,7 @@ public class SwingApp{
         }
 
         mb.add(menu);
+        mb.add(refreshMenu);
         frame.add(tabbedPane);
         frame.setTitle("Ligi piłkarskie");
         frame.setJMenuBar(mb);
@@ -92,6 +138,14 @@ public class SwingApp{
     private void showMessageAndExit(JFrame frame){
         JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
         System.exit(0);
+    }
+
+    private void showFailureMessage(JFrame frame){
+        JOptionPane.showMessageDialog(frame, "You have to choose league first");
+    }
+
+    private void showSuccessMessage(JFrame frame){
+        JOptionPane.showMessageDialog(frame, "Succesfully updated");
     }
 }
 
