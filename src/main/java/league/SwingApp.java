@@ -58,30 +58,33 @@ public class SwingApp{
         ActionListener refreshListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(dataProvider == null){
+                    showFailureMessage(frame);
+                    return;
+                }
+
                 JMenuItem item = (JMenuItem) e.getSource();
+
                 if (item == refreshMatches){
-                    if (dataProvider != null){
-                        dataProvider.refreshMatches();
+                    if (dataProvider.refreshMatches()){
                         leaguePanels[0].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
-                        showFailureMessage(frame);
+                        showConnectionFailureMessage(frame);
                     }
                 } else if (item == refreshTeams) {
-                    if (dataProvider != null) {
-                        dataProvider.refreshTeams();
+                    if (dataProvider.refreshTeams()) {
                         leaguePanels[1].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
-                        showFailureMessage(frame);
+                        showConnectionFailureMessage(frame);
                     }
                 } else if (item == refreshPlayers) {
-                    if (dataProvider != null) {
-                        dataProvider.refreshPlayers();
+                    if (dataProvider.refreshPlayers()) {
                         leaguePanels[2].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
-                        showFailureMessage(frame);
+                        showConnectionFailureMessage(frame);
                     }
                 }
             }
@@ -142,6 +145,10 @@ public class SwingApp{
 
     private void showFailureMessage(JFrame frame){
         JOptionPane.showMessageDialog(frame, "You have to choose league first");
+    }
+
+    private void showConnectionFailureMessage(JFrame frame){
+        JOptionPane.showMessageDialog(frame, "Connection with database lost.\n Check Your internet connection and try again.");
     }
 
     private void showSuccessMessage(JFrame frame){
