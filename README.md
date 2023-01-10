@@ -7,20 +7,20 @@ Następnie należy przejść do nowo utworzonego katalogu:
     cd pap22z-z29
 Następnie należy użyć oprogramowania Maven do skompilowania i uruchomienia aplikacji:
 
-    mvn install; mvn exec:java;
-Po uruchomieniu powyższej komendy w konsoli powinny pokazać się komunikaty Maven'a o pomyślnej instalacji i uruchomieniu, oraz instrukcja wyświetlona przez aplikacje.
-![enter image description here](img/maven_install_exec_sreenshot.png)
+     mvn package; java -jar target/football-1.0.0-jar-with-dependencies.jar
 
-Teraz można na przykład użyć komendy "league 3", aby aplikacja pobrała z danych informacje o lidze o id 3, a następnie 
- użyć komendy "getMatches" aby wyświetlić listę wszystkich meczy rozegranych do tej pory w tej lidze.
+Po uruchomieniu powyższej komendy w konsoli powinny pokazać się komunikaty Maven'a o pomyślnej instalacji, a aplikacja powinna wyświetlić się na ekranie.
+![enter image description here](img/maven_build_success.png)
+![enter image description here](img/maven_run.png)
 
-![enter image description here](img/using_app.png)
+Teraz można na przykład wybrać z górnego menu "Bundesliga", aby pobrać informacje o lidze bundesliga z bazy danych. Można teraz przeglądać mecze, zawodników i drużyny do woli.
+![enter image description here](img/bundesliga.png)
 
 ## Autorzy
  - Paweł Rogóż
  - Zuzanna Damszel
  - Jędrzej Chmiel
 ## Opis projektu / rozwiązywanego problemu
-W ramach projektu tworzymy aplikację desktopową umożliwiającą tworzenie i przeprowadzanie lig oraz turniejów piłkarskich w świecie rzeczywistym. Poprzez aplikację użytkownik może zgłosić swoją drużynę do turniejów, na które w danym momencie prowadzone są zapisy. System rozgrywki ustala terminarz zawodów oraz tworzy tabelę ligi wraz z punktacją poszczególnych zespołów. Kapitanowie zespołów po rozegranym spotkaniu uzupełniają w programie jego wynik oraz ewentualnych strzelców bramek. Po zakończeniu wszystkich meczów aplikacja wskazuje króla strzelców oraz najlepszą drużynę rozgrywek
+Nasza aplikacja umożliwia użytkownikom przeglądanie informacji związanych z piłką nożną w różnych ligach. Użytkownik jest też uprawniony do dodawania nowych informacji do bazy danych w aplikacji. Użytkownikami aplikacji w założeniu są kibice bądź osoby zainteresowane piłką nożną, które mogą dzięki naszemu rozwiązaniu sprawdzić wyniki meczów, listy drużyn w ligach, informacje o zawodnikach i wiele innych.
 ## Wykorzystane narzędzia
 W ramach realizacji naszego projektu korzystamy z języka Java oraz biblioteki Swing

@@ -21,9 +21,7 @@ public class SwingApp{
     JMenuBar mb;
     LeaguePanel[] leaguePanels;
     DataProvider dataProvider;
-    String chosenLeagueName;
     JTabbedPane tabbedPane;
-    JTextField textField;
     public SwingApp() {
         //creating leagues to run dataProvider
 
@@ -33,7 +31,6 @@ public class SwingApp{
 
         if(!DataProvider.prepareData()) showMessageAndExit(frame);
 
-        League firstLeague = leagues[0];
 
         //initializing variables
 
@@ -75,6 +72,7 @@ public class SwingApp{
                 } else if (item == refreshTeams) {
                     if (dataProvider.refreshTeams()) {
                         leaguePanels[1].changeLeague(dataProvider);
+                        leaguePanels[3].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
                         showConnectionFailureMessage(frame);
