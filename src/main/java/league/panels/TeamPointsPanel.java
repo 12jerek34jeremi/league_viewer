@@ -2,8 +2,12 @@ package league.panels;
 
 import league.conectivity.DataProvider;
 import league.types.*;
+import org.javatuples.Pair;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class TeamPointsPanel extends LeagueViewingPanel{
 
@@ -20,8 +24,21 @@ public class TeamPointsPanel extends LeagueViewingPanel{
             return new IndexButton("", -1);
         }
 
-        for(SimpleTeam team : teams){
-            TeamPoints teamPoints = dataProvider.count_team_points(team.teamID);
+        Pair<SimpleTeam, TeamPoints>[] points = new Pair[teams.length];
+        for(int i = 0; i<teams.length; i++){
+            points[i] = new Pair<SimpleTeam, TeamPoints>(teams[i], dataProvider.count_team_points(teams[i].teamID));
+        }
+        Arrays.sort(points, new Comparator<Pair<SimpleTeam, TeamPoints>>() {
+            @Override
+            public int compare(Pair<SimpleTeam, TeamPoints> p1, Pair<SimpleTeam, TeamPoints> p2) {
+                return Integer.compare(p1.getValue1().points, p2.getValue1().points);
+            }
+        });
+
+        for(Pair<SimpleTeam, TeamPoints> pair : points){
+            SimpleTeam team = pair.getValue0();
+            TeamPoints teamPoints = pair.getValue1();
+
             JPanel teamPointsPanel = new JPanel(new GridLayout(1, 7));
             IndexButton button = new IndexButton("Zobacz wyniki", team.teamID);
             button.addActionListener(this);
