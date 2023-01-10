@@ -37,11 +37,14 @@ public class TeamsPanel extends LeagueViewingPanel{
     void launchNewWindow(int teamIndex){
         System.out.println("W Teams, zostałem kliknięty");
         System.out.println("Indeks druzyny to: " + teamIndex);
+
         JFrame frame = new JFrame();
+        //getting team object as it will be needed to create panels
         FullTeam team = dataProvider.getTeam(teamIndex);
         if (team == null) showMessageAndExit(frame);
 
         frame.setTitle(team.teamName);
+        //creating two JPanels, tabbedPane's components
         JPanel teamDataPanel = teamDataPanel(team);
         JPanel teamPlayerPanel = teamPlayerPanel(team, frame);
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -63,7 +66,7 @@ public class TeamsPanel extends LeagueViewingPanel{
     }
 
     private JPanel teamPlayerPanel(FullTeam team, JFrame frame){
-        JPanel teamPlayerPanel = new JPanel(new BorderLayout());
+        JPanel teamPlayerPanel = new JPanel(new BorderLayout()); //panel which consists all other panels
         int teamId = team.teamID;
         JPanel elementsPanel = new JPanel();
         BoxLayout elementsPanelLayout = new BoxLayout(elementsPanel, BoxLayout.PAGE_AXIS);
@@ -72,6 +75,7 @@ public class TeamsPanel extends LeagueViewingPanel{
         SimplePlayer[] players = dataProvider.getPlayers();
         if(players == null) showMessageAndExit(frame);
 
+        //adding players
         for (SimplePlayer player : players){
             if (player.teamId == teamId){
                 JPanel data = new JPanel(new GridLayout(1, 2));
@@ -97,6 +101,7 @@ public class TeamsPanel extends LeagueViewingPanel{
     }
 
     private void showMessageAndExit(JFrame frame){
+        //to handle case when dataProvider cannot get any data
         JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
         System.exit(0);
     }
