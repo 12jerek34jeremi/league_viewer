@@ -36,18 +36,19 @@ public class SwingApp{
 
         mb = new JMenuBar();
         menu = new JMenu("Wybierz Ligę");
-        refreshMenu = new JMenu("Zaaktualizuj dane");
+        refreshMenu = new JMenu("Zaktualizuj dane");
         items = new ArrayList<>();
         leaguesData = new HashMap<String, Integer>();
 
         // creating JTabbedPane and its Pane's
         tabbedPane = new JTabbedPane();
-        leaguePanels = new LeaguePanel[]{new MatchesPanel(), new TeamsPanel(), new PlayersPanel(), new AddingPanel()};//LINE MODIFIED BY JCh
+        leaguePanels = new LeaguePanel[]{new MatchesPanel(), new TeamsPanel(), new PlayersPanel(), new TeamPointsPanel(), new AddingPanel()};//LINE MODIFIED BY JCh
 
         tabbedPane.add("mecze", leaguePanels[0]);
         tabbedPane.add("zespoły", leaguePanels[1]);
         tabbedPane.add("zawodnicy", leaguePanels[2]);
-        tabbedPane.add("Dodaj", leaguePanels[3]);
+        tabbedPane.add("tabela", leaguePanels[3]); //line modified
+        tabbedPane.add("Dodaj", leaguePanels[4]);
 
         JMenuItem refreshMatches = new JMenuItem("Odśwież mecze");
         JMenuItem refreshTeams = new JMenuItem("Odśwież zespoły");
