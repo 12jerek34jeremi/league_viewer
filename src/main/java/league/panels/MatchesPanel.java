@@ -47,6 +47,7 @@ public class MatchesPanel extends LeagueViewingPanel{
         System.out.println("W Matches, zostałem kliknięty.");
         System.out.println("Indeks meczu to: " + matchIndex);
 
+        //this frame contain only one panel, the one with match data
         Match match = dataProvider.getMatch(matchIndex);
         JFrame frame = new JFrame();
         if(match == null) showMessageAndExit(frame);
@@ -58,6 +59,7 @@ public class MatchesPanel extends LeagueViewingPanel{
     }
 
     private JPanel matchDataPanel(Match match){
+        //returns whole match data, based on given id
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         JPanel matchPanel = new JPanel(new GridLayout(5, 1));
         matchPanel.add(new JLabel("Drużyna A: " + match.firstTeamName));
@@ -69,6 +71,7 @@ public class MatchesPanel extends LeagueViewingPanel{
     }
 
     private void showMessageAndExit(JFrame frame){
+        //to handle case when dataProvider cannot get any data
         JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
         System.exit(0);
     }

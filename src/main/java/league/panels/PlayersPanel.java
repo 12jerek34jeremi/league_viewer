@@ -60,6 +60,7 @@ public class PlayersPanel extends LeagueViewingPanel{
     }
 
     private Match[] findMatches(int playerIndex, JFrame frame){
+        //returns matches of given player's team based on given id
         FullPlayer player = dataProvider.getPlayer(playerIndex);
         if(player == null) showMessageAndExit(frame);
         int teamId = player.teamId;
@@ -74,6 +75,7 @@ public class PlayersPanel extends LeagueViewingPanel{
         String[] columnsName = {"Drużyna A", "Drużyna B", "Lokacja", "Wynik", "Data"};
         JPanel header = new JPanel(new GridLayout(1, columnsName.length));
 
+        //adding title columns to header
         for (String name : columnsName){
             header.add(new JLabel(name));
         }
@@ -82,6 +84,7 @@ public class PlayersPanel extends LeagueViewingPanel{
         BoxLayout elementsPanelLayout = new BoxLayout(elementsPanel, BoxLayout.PAGE_AXIS);
         elementsPanel.setLayout(elementsPanelLayout);
 
+        //filling elementsPanel with matches
         for (Match match : matches){
             JPanel matchPanel = new JPanel(new GridLayout(1, 6));
             matchPanel.add(new JLabel(match.firstTeamName));
@@ -92,10 +95,12 @@ public class PlayersPanel extends LeagueViewingPanel{
             elementsPanel.add(matchPanel);
         }
 
+        //creating scroll pane
         JScrollPane scrollPane = new JScrollPane(elementsPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        //determining position of panels
         matchesPanel.add(header, BorderLayout.PAGE_START);
         matchesPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -103,6 +108,7 @@ public class PlayersPanel extends LeagueViewingPanel{
     }
 
     private JPanel playerDataPanel(int playerIndex, JFrame frame){
+        //returns whole player data as a panel, based on given player id
         FullPlayer player = dataProvider.getPlayer(playerIndex);
         if(player == null) showMessageAndExit(frame);
         JPanel dataPanel = new JPanel(new GridLayout(7, 1));
@@ -118,6 +124,7 @@ public class PlayersPanel extends LeagueViewingPanel{
     }
 
     private void showMessageAndExit(JFrame frame){
+        //to handle case when dataProvider cannot get any data
         JOptionPane.showMessageDialog(frame,"Connection with database lost.\n Check Your internet connection and try again.");
         System.exit(0);
     }
