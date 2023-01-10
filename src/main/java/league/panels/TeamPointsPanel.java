@@ -35,9 +35,9 @@ public class TeamPointsPanel extends LeagueViewingPanel{
             }
         });
 
-        for(Pair<SimpleTeam, TeamPoints> pair : points){
-            SimpleTeam team = pair.getValue0();
-            TeamPoints teamPoints = pair.getValue1();
+        for(int i = points.length-1; i>=0; i--){
+            SimpleTeam team = points[i].getValue0();
+            TeamPoints teamPoints = points[i].getValue1();
 
             JPanel teamPointsPanel = new JPanel(new GridLayout(1, 7));
             IndexButton button = new IndexButton("Zobacz wyniki", team.teamID);
