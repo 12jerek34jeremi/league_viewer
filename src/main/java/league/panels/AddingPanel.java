@@ -15,6 +15,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 
 public class AddingPanel extends LeaguePanel implements ItemListener {
+    /**
+     *  Class AddingPanel is a panel that allows user to add new entities(player, match, team, league) to the
+     *  application by providing input fields and a submit button.
+     *  It contains several panels, one for each type of entity and a ComboBox to switch between them.
+     *  It uses CardLayout to switch between panels and DataProvider to communicate with the database.
+     *
+     */
 
     private final CardLayout cardLayout;
     private final JPanel cardContainer;
@@ -24,7 +31,13 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
     private DataProvider dataProvider = null;
 
 
+
     public AddingPanel(){
+        /**
+         * Constructor for the AddingPanel class.
+         * It creates a card layout with 4 input panels for adding new entities(player, match, team, league)
+         * and a combobox to switch between them.
+         */
 
         //ARRAYS CREATION
         String[] actions = new String[]{
@@ -67,6 +80,10 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
 
     @Override
     public void changeLeague(DataProvider dataProvider) {
+        /**
+         * This method is called when there is a need to update the panel with new information from the database
+         * @param dataProvider : Instance of the DataProvider class, used to retrieve data from the database
+         */
         this.dataProvider = dataProvider;
         String[] teamsNames = indexerToStrings(dataProvider.getTeams());
 
@@ -76,6 +93,11 @@ public class AddingPanel extends LeaguePanel implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
+        /**
+         * This method is called when the user selects a different item in the combobox,
+         * it changes the displayed panel based on the selected item
+         * */
+
         if(itemEvent.getStateChange() == ItemEvent.SELECTED){
             int index = actionsBox.getSelectedIndex();
             if(dataProvider == null && (index == 0 || index == 1 || index == 2)) {
