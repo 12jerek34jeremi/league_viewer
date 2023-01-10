@@ -66,6 +66,7 @@ public class SwingApp{
                 if (item == refreshMatches){
                     if (dataProvider.refreshMatches()){
                         leaguePanels[0].changeLeague(dataProvider);
+                        leaguePanels[3].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
                         showConnectionFailureMessage(frame);
@@ -82,7 +83,6 @@ public class SwingApp{
                 } else if (item == refreshPlayers) {
                     if (dataProvider.refreshPlayers()) {
                         leaguePanels[2].changeLeague(dataProvider);
-                        leaguePanels[3].changeLeague(dataProvider);
                         showSuccessMessage(frame);
                     } else {
                         showConnectionFailureMessage(frame);

@@ -16,7 +16,6 @@ class InputsPanel extends JPanel {
     private JTextField[] textFields = null;
     private JSpinner[] spinners = null;
     private AutoComboBox[] autoComboBoxes;
-    private  JLabel messageLabel;
     private JButton button;
     private final Validator validator;
     private final String[] textFieldsLabels, spinnersLabels, autoComboBoxesLabels;
@@ -90,7 +89,9 @@ class InputsPanel extends JPanel {
             //SHOW MESSAGE INDICATING WRONG DATA OR TRY TO INSERT DATA TO DATABASE
             if(validationCheck.getValue0() == null){
                 button.setEnabled(false);
-                messageLabel.setText("Prosze czekać, wprowadzam dane.");
+                JLabel messageLabel = new JLabel("Prosze czekać, wprowadzam dane.");
+                add("messageLabel", messageLabel);
+                messageLabel.setVisible(true);
                 Pair<int[], String[]> dataToInsert = validationCheck.getValue1();
                 boolean success = validator.insertData(dataToInsert.getValue0(), dataToInsert.getValue1());
                 if(success) {
@@ -101,17 +102,17 @@ class InputsPanel extends JPanel {
                             "Wystąpił błąd przy wprowadzaniu danych. Sprawdź połączenie i próbuj ponownie póżniej.",
                             "Porażka", JOptionPane.INFORMATION_MESSAGE);
                 }
+
+                messageLabel.setVisible(false);
+                remove(messageLabel);
                 button.setEnabled(true);
-                messageLabel.setText("");
+
             }else{
                 JOptionPane.showMessageDialog(this, validationCheck.getValue0(),
                         "Nieprawidłowe dane", JOptionPane.WARNING_MESSAGE);
             }
         });
         add(button);
-
-        messageLabel = new JLabel("");
-        add(messageLabel);
     }
 
     public void changeLeague(String[][] autoComboBoxesItems){
