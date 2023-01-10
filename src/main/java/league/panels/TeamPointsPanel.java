@@ -73,6 +73,7 @@ public class TeamPointsPanel extends LeagueViewingPanel{
     private JTabbedPane matchesTabbedPane(Match[] matches, int teamIndex){
         JTabbedPane tabbedPane = new JTabbedPane();
 
+        //creating headers
         JPanel winHeader = new JPanel(new GridLayout(1,3));
         winHeader.add(new JLabel("Przeciwnik"));
         winHeader.add(new JLabel("Bramki strzelone"));
@@ -88,10 +89,12 @@ public class TeamPointsPanel extends LeagueViewingPanel{
         lostHeader.add(new JLabel("Bramki strzelone"));
         lostHeader.add(new JLabel("Bramki stracone"));
 
+        //creating 'final' panels
         JPanel winMatchesPanel = new JPanel(new BorderLayout());
         JPanel drawMatchesPanel = new JPanel(new BorderLayout());
         JPanel lostMatchesPanel = new JPanel(new BorderLayout());
 
+        //creating panels that will have matches inside
         JPanel elementsWinPanel = new JPanel();
         BoxLayout elementsWinPanelLayout = new BoxLayout(elementsWinPanel, BoxLayout.PAGE_AXIS);
         elementsWinPanel.setLayout(elementsWinPanelLayout);
@@ -104,30 +107,35 @@ public class TeamPointsPanel extends LeagueViewingPanel{
         BoxLayout elementsLostPanelLayout = new BoxLayout(elementsLostPanel, BoxLayout.PAGE_AXIS);
         elementsLostPanel.setLayout(elementsLostPanelLayout);
 
+        //initalizing goals number
         int current_goals = 0, other_goals = 0;
 
+        //filling elementsPanels with won/draw/lost matches
         for(Match match : matches){
             String[] goals = match.score.split(":");
+            //this panel will consist match data
+            JPanel data = new JPanel(new GridLayout(1, 3));
+            //checking if current team is first or second one to secure data correctness
             if(match.firstTeamId == teamIndex){
                 current_goals = Integer.parseInt(goals[0]);
                 other_goals = Integer.parseInt(goals[1]);
-            } else {
+                data.add(new JLabel(match.secondTeamName));
+            } else if(match.secondTeamId == teamIndex) {
                 current_goals = Integer.parseInt(goals[1]);
                 other_goals = Integer.parseInt(goals[0]);
+                data.add(new JLabel(match.firstTeamName));
             }
 
-            JPanel data = new JPanel(new GridLayout(1, 3));
-
-            if (match.firstTeamId == teamIndex) data.add(new JLabel(match.secondTeamName));
-            else if (match.secondTeamId == teamIndex) data.add(new JLabel(match.firstTeamName));
             data.add(new JLabel(String.valueOf(current_goals)));
             data.add(new JLabel(String.valueOf(other_goals)));
 
+            //checking who is the winner, to select which is the correct panel for this data panel
             if(current_goals > other_goals) elementsWinPanel.add(data);
             else if (current_goals == other_goals) elementsDrawPanel.add(data);
             else if (current_goals < other_goals) elementsLostPanel.add(data);
         }
 
+        //creating scroll panes
         JScrollPane winScrollPane = new JScrollPane(elementsWinPanel);
         JScrollPane drawScrollPane = new JScrollPane(elementsDrawPanel);
         JScrollPane lostScrollPane = new JScrollPane(elementsLostPanel);
@@ -141,6 +149,7 @@ public class TeamPointsPanel extends LeagueViewingPanel{
         lostScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         lostScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        //determining position of panels
         winMatchesPanel.add(winHeader, BorderLayout.PAGE_START);
         winMatchesPanel.add(winScrollPane, BorderLayout.CENTER);
 
