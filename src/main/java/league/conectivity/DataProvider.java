@@ -1,7 +1,6 @@
 package league.conectivity;
 
 import league.types.*;
-
 import java.util.LinkedList;
 
 public class DataProvider {
@@ -204,6 +203,40 @@ public class DataProvider {
         return true;
     }
 
+
+
+    public TeamPoints count_team_points(int team_id){
+        /*
+        This method reaturns TeamPoints object of team of id team_id (arg).
+        This method doesn't connect to internet.
+        Using this method you don't need to check if result is null, result is never null;
+         */
+        int wonMatches = 0, lostMatches = 0, drawMatches = 0;
+        for(Match match : matches){
+            if(match.firstTeamId == team_id || match.secondTeamId == team_id){
+                String[] goals = match.score.split(":");
+                int my_team_goals = Integer.parseInt(goals[0]),
+                        other_team_goals = Integer.parseInt(goals[1]);
+
+                if(my_team_goals == other_team_goals){
+                    drawMatches++;
+                }else{
+                    if(match.secondTeamId == team_id){
+                        int temp = my_team_goals;
+                        my_team_goals = other_team_goals;
+                        other_team_goals = temp;
+                    }
+
+                    if(my_team_goals > other_team_goals){
+                        wonMatches++;
+                    }else{
+                        lostMatches++;
+                    }
+                }
+            }
+        }
+        return new TeamPoints(wonMatches, lostMatches, drawMatches);
+    }
 
 
 
