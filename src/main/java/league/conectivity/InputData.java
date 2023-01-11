@@ -4,6 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class InputData {
+    /*
+    This class allows to input data from the graphic interface of our application to Oracle database.
+    It has four methods:
+    - inputPlayer - adds a new player to database
+    - inputTeam - inserts to database a team that was described in "Dodaj drużynę" panel
+    - inputMatch - this method adds information about match to database
+    - inputLeague - adds a new league to database
+     */
     public static boolean inputPlayer(int height, int weight, String name, String surname, String birthDate, String countryName, String teamName) {
         Connection con = BaseConector.getConnection();
         if (con == null)
@@ -34,7 +42,7 @@ public class InputData {
             if(rs.next())
                 teamId = rs.getInt(1);
 
-
+            // main query
             String query = "INSERT INTO players (player_id, name, surname, birth_date, height, weight, birth_country_id, team_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             stmt=con.prepareStatement(query);
             stmt.setInt(1, playerId);
@@ -80,6 +88,7 @@ public class InputData {
             if(rs.next())
                 countryId = rs.getInt(1);
 
+            // main queries
             String query = "INSERT INTO teams (name, team_id, acronym, country_id) VALUES (?, ?, ?, ?)";
             stmt = con.prepareStatement(query);
             stmt.setString(1, name);
@@ -142,6 +151,7 @@ public class InputData {
                 matchId = rs.getInt(1);
             matchId += 1;
 
+            //main queries
             String queryToMatches = "INSERT INTO matches (match_date, match_id, stadium_id, league_id) VALUES (?, ?, ?, ?)";
             stmt = con.prepareStatement(queryToMatches);
             stmt.setDate(1, java.sql.Date.valueOf(date));
@@ -176,6 +186,7 @@ public class InputData {
         if(con == null)
             return false;
         try {
+            // getting max league_id and incrementing by 1
             String getLeagueId = "SELECT max(league_id) FROM leagues";
             PreparedStatement stmt = con.prepareStatement(getLeagueId);
             ResultSet rs = stmt.executeQuery(getLeagueId);
@@ -184,6 +195,7 @@ public class InputData {
                 leagueId = rs.getInt(1);
             leagueId += 1;
 
+            // main query
             String queryToLeagues = "INSERT INTO leagues (league_id, name) VALUES (?, ?)";
             stmt = con.prepareStatement(queryToLeagues);
             stmt.setInt(1, leagueId);
