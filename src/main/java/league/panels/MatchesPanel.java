@@ -22,7 +22,7 @@ public class MatchesPanel extends LeagueViewingPanel{
             return new IndexButton("", -1);
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         for(Match match : matches){
             JPanel matchPanel = new JPanel(new GridLayout(1, 6));
