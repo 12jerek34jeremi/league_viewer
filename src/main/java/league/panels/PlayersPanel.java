@@ -71,7 +71,7 @@ public class PlayersPanel extends LeagueViewingPanel{
 
     private JPanel playerMatchesPanel(Match[] matches){
         JPanel matchesPanel = new JPanel(new BorderLayout());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String[] columnsName = {"Drużyna A", "Drużyna B", "Lokacja", "Wynik", "Data"};
         JPanel header = new JPanel(new GridLayout(1, columnsName.length));
 
