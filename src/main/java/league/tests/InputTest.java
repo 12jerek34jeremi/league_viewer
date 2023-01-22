@@ -5,17 +5,12 @@ import league.types.*;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
 import league.conectivity.InputData;
-
-import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.SortedMap;
 
 public class InputTest {
     static private Random generator;
@@ -25,7 +20,8 @@ public class InputTest {
         generator = new Random();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String sufix = "T" + generator.nextInt(1000);
-        String newLeagueName = "LigaTestowa"+sufix;
+        String newLeagueName = "LigaTestowa"+sufix, firstTeamName = "FirstTeam"+sufix,
+            secondTeamName = "SecondTeam"+sufix;
 
 
         System.out.println("START: Uploading new league");
@@ -36,7 +32,6 @@ public class InputTest {
         System.out.println("START: Downloading leagues");
         League[] leagues = DataProvider.getLeagues();
         if(leagues == null) no_connection();
-//        if(leagues.length == 0)
         System.out.println("FINISH: Downloading leagues");
 
 
@@ -57,7 +52,7 @@ public class InputTest {
         System.out.println("END: downloading stadiums and country data");
 
 
-        String fristTeamCountry = rand_element(DataProvider.getCountries()).countryName,
+        String firstTeamCountry = rand_element(DataProvider.getCountries()).countryName,
             secondTeamContry = rand_element(DataProvider.getCountries()).countryName,
             matchDate = formatter.format(new Date()),
             playerBirthday = "" + (generator.nextInt(50) + 1960) + "-0" + generator.nextInt(9) +
@@ -81,24 +76,24 @@ public class InputTest {
 
 
         System.out.println("START: uploadingFirstTeam");
-        InputData.inputTeam(newLeague.leagueId, "FirstTeam", "FTA", fristTeamCountry);
+        InputData.inputTeam(newLeague.leagueId, firstTeamName, "FTA", firstTeamCountry);
         System.out.println("END: uploadingFirstTeam");
 
 
         System.out.println("START: uploadingSecondTeam");
-        InputData.inputTeam(newLeague.leagueId, "SecondTeam", "STA", secondTeamContry);
+        InputData.inputTeam(newLeague.leagueId, secondTeamName, "STA", secondTeamContry);
         System.out.println("END: uploadingSecondTeam");
 
 
         System.out.println("START: uploadingMatch");
-        InputData.inputMatch(firstTeamGoals, secondTeamGoals, newLeague.leagueId, matchDate, "FirstTeam",
-                "SecondTeam", stadiumName);
+        InputData.inputMatch(firstTeamGoals, secondTeamGoals, newLeague.leagueId, matchDate, firstTeamName,
+                secondTeamName, stadiumName);
         System.out.println("END: uploadingMatch");
 
 
         System.out.println("START: uploadingPlayer");
         InputData.inputPlayer(playerHeight, playerWeight, "Jan", "Kowalski", playerBirthday,
-            fristTeamCountry, "FirstTeam");
+            firstTeamCountry, firstTeamName);
         System.out.println("END: uploadingPlayer");
 
 
@@ -107,9 +102,9 @@ public class InputTest {
         System.out.println("END: Downloading general info about newly created league");
 
 
-        SimpleTeam firstTeam = findIndexer(dataProvider.getTeams(), "FirstTeam");
+        SimpleTeam firstTeam = findIndexer(dataProvider.getTeams(), firstTeamName);
         if(firstTeam == null) print_and_exit("There is no team of name 'FirstTeam' in downloaded SimpleTeam array");
-        SimpleTeam secondTeam = findIndexer(dataProvider.getTeams(), "SecondTeam");
+        SimpleTeam secondTeam = findIndexer(dataProvider.getTeams(), secondTeamName);
         if(firstTeam == null) print_and_exit("There is no team of name 'SecondTeam' in downloaded SimpleTeam array");
 
 
@@ -121,10 +116,10 @@ public class InputTest {
 
 
         System.out.println("START: Checking teams");
-        assertEquals(firstTeamFull.teamName, "FirstTeam");
-        assertEquals(firstTeamFull.origins, fristTeamCountry);
+        assertEquals(firstTeamFull.teamName, firstTeamName);
+        assertEquals(firstTeamFull.origins, firstTeamCountry);
         assertEquals(firstTeamFull.matches.length, 1);
-        assertEquals(secondTeamFull.teamName, "SecondTeam");
+        assertEquals(secondTeamFull.teamName, secondTeamName);
         assertEquals(secondTeamFull.origins, secondTeamContry);
         assertEquals(secondTeamFull.matches.length, 1);
         System.out.println("END: Checking teams");
@@ -135,13 +130,23 @@ public class InputTest {
         Match[] matches = dataProvider.getMatches();
         assertEquals(matches.length, 1);
         Match match = matches[0];
-        assertEquals(match.score, ""+firstTeamGoals+":"+secondTeamGoals);
-        assertEquals(formatter.format(match.date), matchDate);
-        assertEquals(match.firstTeamName, "FirstTeam");
-        assertEquals(match.secondTeamName, "SecondTeam");
-        assertEquals(match.location, stadiumName);
-        assertEquals(match.firstTeamId, firstTeam.teamID);
-        assertEquals(match.secondTeamId, secondTeam.teamID);
+        if(match.firstTeamName.equals(firstTeamName)){
+            assertEquals(match.secondTeamName, secondTeamName);
+            assertEquals(match.score, ""+firstTeamGoals+":"+secondTeamGoals);
+            assertEquals(formatter.format(match.date), matchDate);
+            assertEquals(match.location, stadiumName);
+            assertEquals(match.firstTeamId, firstTeam.teamID);
+            assertEquals(match.secondTeamId, secondTeam.teamID);
+        } else if (match.firstTeamName.equals(secondTeamName)) {
+            assertEquals(match.secondTeamName, firstTeamName);
+            assertEquals(match.score, ""+secondTeamGoals+":"+firstTeamGoals);
+            assertEquals(formatter.format(match.date), matchDate);
+            assertEquals(match.location, stadiumName);
+            assertEquals(match.firstTeamId, secondTeam.teamID);
+            assertEquals(match.secondTeamId, firstTeam.teamID);
+        }else{
+            print_and_exit("Unexpected team name in match: " + match.firstTeamName);
+        }
         System.out.println("END: checking matches");
 
 
@@ -152,7 +157,7 @@ public class InputTest {
         assertEquals(player.firstName, "Jan");
         assertEquals(player.lastName, "Kowalski");
         assertEquals(player.teamId, firstTeam.teamID);
-        assertEquals(player.teamName, "FirstTeam");
+        assertEquals(player.teamName, firstTeamName);
         System.out.println("END: checking simple players");
 
 
@@ -164,13 +169,12 @@ public class InputTest {
 
         System.out.println("START: checking full player");
         assertEquals(fullPlayer.height, playerHeight);
-        assertEquals(fullPlayer.weight, playerHeight);
+        assertEquals(fullPlayer.weight, playerWeight);
         assertEquals(fullPlayer.firstName, "Jan");
         assertEquals(fullPlayer.lastName, "Kowalski");
         assertEquals(fullPlayer.age, playerAge);
-        assertEquals(fullPlayer.origin, fristTeamCountry);
-        assertEquals(fullPlayer.teamName, "FirstTeam");
-        assertEquals(fullPlayer.teamName, "SecondTeam");
+        assertEquals(fullPlayer.origin, firstTeamCountry);
+        assertEquals(fullPlayer.teamName, firstTeamName);
         System.out.println("END: checking full player");
 
         System.out.println("\n\nLeagues");
@@ -217,16 +221,3 @@ public class InputTest {
 
 
 }
-
-/*
-
-        League[] leagues = DataProvider.getLeagues();
-        if(leagues == null) print_and_exit();
-
-        if(leagues.length == 0){
-            System.out.println("There are no leagues in database. Can't run test");
-            System.exit(0);
-        }
-
-        DataProvider dataProvider = DataProvider.getDataProvider(leagues[0].leagueId);
- */

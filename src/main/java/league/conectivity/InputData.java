@@ -18,7 +18,7 @@ public class InputData {
             return false;
         try {
             // getting country_id by its name from database
-            String getCountryId = "SELECT country_id FROM countries WHERE name like '"+ countryName + " '";
+            String getCountryId = "SELECT country_id FROM countries WHERE name like '"+ countryName + "'";
             PreparedStatement stmt = con.prepareStatement(getCountryId);
             ResultSet rs = stmt.executeQuery(getCountryId);
             int countryId = 0;
@@ -81,7 +81,7 @@ public class InputData {
             teamId += 1;
 
             // getting country_id by its name 
-            String get_country_id = "SELECT country_id FROM countries WHERE name like '"+ countryName + " '";
+            String get_country_id = "SELECT country_id FROM countries WHERE name like '"+ countryName + "'";
             stmt = con.prepareStatement(get_country_id);
             rs = stmt.executeQuery(get_country_id);
             int countryId = 0;
