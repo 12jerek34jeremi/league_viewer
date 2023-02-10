@@ -1,3 +1,5 @@
+package league;
+
 import league.conectivity.DataProvider;
 import league.panels.*;
 import league.types.League;
