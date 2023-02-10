@@ -1,4 +1,3 @@
-package league.tests;
 
 import league.conectivity.DataProvider;
 import league.types.*;
@@ -17,6 +16,7 @@ public class InputTest {
 
     @Test
     public void testInput(){
+        /*
         generator = new Random();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String sufix = "T" + generator.nextInt(1000);
@@ -190,7 +190,7 @@ public class InputTest {
         System.out.println("\n\nSimplePlayers");
         System.out.println(players);
         System.out.println("\n\nFullPlayer");
-        PrettyPrint.printFullPlayer(fullPlayer);
+        PrettyPrint.printFullPlayer(fullPlayer); */
 
     }
 

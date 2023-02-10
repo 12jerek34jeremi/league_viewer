@@ -1,4 +1,3 @@
-package league.tests;
 import league.types.TeamPoints;
 import org.junit.Test;
 import static org.junit.Assert.*;

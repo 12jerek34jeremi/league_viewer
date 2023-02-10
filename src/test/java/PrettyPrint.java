@@ -1,4 +1,3 @@
-package league.tests;
 
 import league.types.*;
 
