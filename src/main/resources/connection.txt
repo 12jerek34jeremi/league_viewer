@@ -1,6 +1,6 @@
 {
 "className": "oracle.jdbc.driver.OracleDriver",
-"url": "jdbc:oracle:thin:@ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl",
-"user": "z99",
-"password": "29vwr3",
+"url": "jdbc:oracle:thin:@database-league-viewer.cbi0dotflxge.us-east-1.rds.amazonaws.com:1521/ORCL",
+"user": "downloader",
+"password": "MRHXEzLYyhgkcDHVzHSgEXoPM",
 }

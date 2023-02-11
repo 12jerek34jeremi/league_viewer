@@ -18,9 +18,9 @@ class DataGetter {
         LinkedList<SimplePlayer> playersList = getResultList("""
                         SELECT P.player_id AS playerId, P.team_id AS teamID,
                             P.name AS firstName, P.surname AS lastName, T.name AS teamName
-                        FROM players P LEFT JOIN teams T
+                        FROM creator.players P LEFT JOIN creator.teams T
                                 ON P.team_id = T.team_id
-                            INNER JOIN team_plays_in_league TL
+                            INNER JOIN creator.team_plays_in_league TL
                                 ON TL.team_id = T.team_id
                         WHERE TL.league_id = ?
                         ORDER BY P.surname, P.name
@@ -47,9 +47,9 @@ class DataGetter {
         LinkedList<FullPlayer> oneElementList = getResultList("""
                         SELECT P.player_id AS playerId, P.team_id AS teamID, P.birth_date as birthDate, P.height AS height, P.weight AS weight,
                                P.name AS firstName, P.surname AS lastName, T.name AS teamName, C.name AS origin
-                        FROM players P LEFT JOIN teams T
+                        FROM creator.players P LEFT JOIN creator.teams T
                                 ON P.team_id = T.team_id
-                            LEFT JOIN countries C
+                            LEFT JOIN creator.countries C
                                 ON P.birth_country_id = C.country_ID
                         WHERE P.player_id = ?
                                 """,
@@ -93,15 +93,15 @@ class DataGetter {
                                 TM1.goal_amount AS firstTeamGoals, TM2.goal_amount AS secondTeamGoals, S.name AS location,
                                 M.match_date AS matchDate
                                 
-                        FROM team_plays_in_match TM1 INNER JOIN team_plays_in_match TM2
+                        FROM creator.team_plays_in_match TM1 INNER JOIN creator.team_plays_in_match TM2
                                 ON TM1.match_id = TM2.match_id AND TM1.team_id > TM2.team_id
-                            INNER JOIN teams T1
+                            INNER JOIN creator.teams T1
                                 ON TM1.team_id = T1.team_id
-                            INNER JOIN teams T2
+                            INNER JOIN creator.teams T2
                                 ON TM2.team_id = T2.team_id
-                            INNER JOIN matches M
+                            INNER JOIN creator.matches M
                                 ON TM1.match_id = M.match_id
-                            INNER JOIN stadiums S
+                            INNER JOIN creator.stadiums S
                                 ON S.stadium_id = M.stadium_id
                                 
                         WHERE M.league_id = ?
@@ -132,7 +132,7 @@ class DataGetter {
     static SimpleTeam[] getTeams(int league_id) {
         LinkedList<SimpleTeam> teamList = getResultList("""
                         SELECT T.team_id AS teamID, T.name AS teamName
-                        FROM teams T INNER JOIN team_plays_in_league TL
+                        FROM creator.teams T INNER JOIN creator.team_plays_in_league TL
                             ON T.team_id = TL.team_id
                         WHERE TL.league_id = ?
                         ORDER BY T.name
@@ -156,7 +156,7 @@ class DataGetter {
         LinkedList<League>  leagueList = getResultList(
             """
             SELECT league_id AS leagueId, name AS leagueName
-            FROM leagues
+            FROM creator.leagues
             """,
 
             (((resultSet, resultList) -> {
@@ -175,7 +175,7 @@ class DataGetter {
     static String getTeamOrigin(int teamId){
         LinkedList<String> origin = getResultList("""
             SELECT C.name as origins
-            FROM teams T INNER JOIN countries C
+            FROM creator.teams T INNER JOIN creator.countries C
                 ON T.country_id = C.country_id
             WHERE T.team_id = ?""",
             ((resultSet, resultList) -> {
@@ -190,7 +190,7 @@ class DataGetter {
     static Country[] getCountries(){
         LinkedList<Country> countries = getResultList("""
             SELECT country_id as countryId, name as countryName
-            FROM countries""",
+            FROM creator.countries""",
 
                 (((resultSet, resultList) -> {
                     resultList.add(new Country(
@@ -209,7 +209,7 @@ class DataGetter {
     static Stadium[] getStadiums(){
         LinkedList<Stadium> stadiums = getResultList("""
             SELECT stadium_id as stadiumId, name as stadiumName
-            FROM stadiums""",
+            FROM creator.stadiums""",
 
                 (((resultSet, resultList) -> {
                     resultList.add(new Stadium(
