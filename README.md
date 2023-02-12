@@ -1,7 +1,7 @@
 # League Viewer
 Aplikacja League Viewer była współtworzona przeze mnie w ramach projektu z Programownia Alikacyjnego na uczelni. W tym pliku README.md znajdziesz [link do video](https://drive.google.com/file/d/1wyUm6_Vz_4pqdqQw1XxXmbbhKgX2G-dE/view?usp=share_link), na którym pokazuje jak aplikacja wygląda i jak można jej używać, [instrukcje skompilowania i uruchomienia aplikacji](#kompilacja-i-uruchomienie), [opis mojej części projektu](#moja-część-projektu), [krótki opis tego na co pozwala aplikacja](#funkcje-aplikacji) oraz, na końcu pliku, [kilka screenów z aplikacji](#kilka-screenów-z-aplikacji). Aplikacja umożliwia użytkownikom przeglądanie informacji związanych z piłką nożną w różnych ligach oraz dodawanie nowych informacji.
 
-Tutaj masz [link do video](https://drive.google.com/file/d/1wyUm6_Vz_4pqdqQw1XxXmbbhKgX2G-dE/view?usp=share_link), na którym pokazuje jak aplikacja wygląda i jak można jej używać.
+Tutaj masz [link do video](https://drive.google.com/file/d/1v48XZgSmH-Su3g6PAoOSJAcw1wl3UKvi/view?usp=share_link), na którym pokazuje jak aplikacja wygląda i jak można jej używać.
 
 ### Kompilacja i uruchomienie
 Aby skompilować i uruchomić aplikacje należy najpierw sklonować repozytorium na zwój komputer i rzejść do nowo utworzonego katalogu.
